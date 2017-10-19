@@ -46,7 +46,6 @@ public class crudResponsable extends javax.swing.JDialog {
                     Responsable responsable = new Responsable();
                     responsable.setEstado(0);
                     
-
                     sesion.update(responsable);
                     sesion.getTransaction().commit();
                     sesion.close();
@@ -54,6 +53,97 @@ public class crudResponsable extends javax.swing.JDialog {
                     he.printStackTrace();
             }
         }
+        cargarTabla();
+    }
+    
+    public void limpiar(){
+        txtNombre.setText("");
+        txtNombre.setEnabled(false);
+        
+        txtDNI.setText("");
+        txtDNI.setEnabled(false);
+        
+        txtDireccion.setText("");
+        txtDireccion.setEnabled(false);
+        
+        txtEmail.setText("");
+        txtEmail.setEnabled(false);
+        
+        txtTelefono.setText("");
+        txtTelefono.setEnabled(false);
+        
+        txtid.setText("");
+        
+        btnGuardar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnModificar.setEnabled(false);
+        
+        chkEstado.setEnabled(false);
+    }
+    
+    public void cargarTabla(){
+        Session sesion = HibernateUtil.getSessionFactory().openSession();
+        DefaultTableModel modelo = new DefaultTableModel();
+        tblResponsable.setModel(modelo);
+        modelo.addColumn("id");
+        modelo.addColumn("Estado");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Direccion");
+        modelo.addColumn("DNI");
+        modelo.addColumn("E-mail");
+        modelo.addColumn("Telefono");
+        
+        List<Responsable>listaResponsables = null;
+        
+        sesion.beginTransaction();
+        listaResponsables = sesion.createQuery("from Responsable").list();
+        
+        for  (Responsable x : listaResponsables){
+            Responsable Responsable = x;
+            
+            Object fila[] = new Object[6];
+            
+            fila[0] = Responsable.getIdResponsable();
+            int estado = Responsable.getEstado();
+            if ( estado == 0){
+                fila[1] = "Inactivo";
+            }else{
+                fila[1] = "Activo";
+            }
+            fila[2] = Responsable.getNombre();
+            fila[3] = Responsable.getDireccion();
+            fila[4] = Responsable.getDni();
+            fila[5] = Responsable.getEmail();
+            fila[5] = Responsable.getTelefono();
+            
+            
+            
+            modelo.addRow(fila);
+        }
+        sesion.getTransaction().commit();
+        sesion.close(); 
+    }
+    
+    public void actualizar() {
+        try {
+            Session sesion = HibernateUtil.getSessionFactory().openSession();
+            sesion.beginTransaction();
+            
+                Responsable res = new Responsable();
+                res.setNombre(txtNombre.getText());
+                res.setDireccion(txtDireccion.getText());
+                res.setDni(txtDNI.getText());
+                res.setEmail(txtEmail.getText());
+                
+                sesion.update(res);
+                sesion.getTransaction().commit();
+                sesion.close();
+                
+        } catch (HibernateException he){
+            JOptionPane.showMessageDialog(this, "Hay un error en los campos", "ERROR", JOptionPane.ERROR_MESSAGE);
+            he.printStackTrace();
+        }
+        cargarTabla();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -84,6 +174,8 @@ public class crudResponsable extends javax.swing.JDialog {
         txtEmail = new javax.swing.JTextField();
         lblEmail2 = new javax.swing.JLabel();
         chkEstado = new javax.swing.JCheckBox();
+        txtTelefono = new javax.swing.JTextField();
+        lblTelefono = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
@@ -195,6 +287,11 @@ public class crudResponsable extends javax.swing.JDialog {
 
         chkEstado.setSelected(true);
 
+        txtTelefono.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
+        txtTelefono.setText("Telefono");
+
+        lblTelefono.setText("Telefono");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -212,7 +309,8 @@ public class crudResponsable extends javax.swing.JDialog {
                             .addComponent(lblDNI)
                             .addComponent(lblDireccion)
                             .addComponent(lblEmail)
-                            .addComponent(lblEmail2))
+                            .addComponent(lblEmail2)
+                            .addComponent(lblTelefono))
                         .addGap(101, 101, 101)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtEmail)
@@ -225,7 +323,8 @@ public class crudResponsable extends javax.swing.JDialog {
                                         .addComponent(txtDireccion, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
                                         .addComponent(txtDNI)
                                         .addComponent(txtNombre)))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(txtTelefono))))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -253,6 +352,10 @@ public class crudResponsable extends javax.swing.JDialog {
                     .addComponent(lblEmail)
                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTelefono)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEmail2)
                     .addComponent(chkEstado))
@@ -260,10 +363,10 @@ public class crudResponsable extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEmail1)
                     .addComponent(txtid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, -1, 260));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, -1, 330));
 
         btnGuardar.setBackground(new java.awt.Color(153, 153, 153));
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
@@ -343,7 +446,7 @@ public class crudResponsable extends javax.swing.JDialog {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
@@ -353,7 +456,7 @@ public class crudResponsable extends javax.swing.JDialog {
                 .addGap(15, 15, 15))
         );
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 351, -1, 340));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 421, -1, 270));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -407,6 +510,9 @@ public class crudResponsable extends javax.swing.JDialog {
         
         txtEmail.setText("");
         txtEmail.setEnabled(true);
+        
+        txtTelefono.setText("");
+        txtTelefono.setEnabled(true);
         
         txtid.setText("");
         
@@ -492,88 +598,7 @@ public class crudResponsable extends javax.swing.JDialog {
         });
     }
     
-    public void limpiar(){
-        txtNombre.setText("");
-        txtNombre.setEnabled(false);
-        
-        txtDNI.setText("");
-        txtDNI.setEnabled(false);
-        
-        txtDireccion.setText("");
-        txtDireccion.setEnabled(false);
-        
-        txtEmail.setText("");
-        txtEmail.setEnabled(false);
-        
-        txtid.setText("");
-        
-        btnGuardar.setEnabled(false);
-        btnEliminar.setEnabled(false);
-        btnModificar.setEnabled(false);
-        
-        chkEstado.setEnabled(false);
-    }
     
-    public void cargarTabla(){
-        Session sesion = HibernateUtil.getSessionFactory().openSession();
-        DefaultTableModel modelo = new DefaultTableModel();
-        tblResponsable.setModel(modelo);
-        modelo.addColumn("id");
-        modelo.addColumn("Nombre");
-        modelo.addColumn("DNI");
-        modelo.addColumn("Dirección");
-        modelo.addColumn("E-mail");
-        modelo.addColumn("Estado");
-        
-        List<Responsable>listaResponsables = null;
-        
-        sesion.beginTransaction();
-        listaResponsables = sesion.createQuery("from Responsable").list();
-        
-        for  (Responsable x : listaResponsables){
-            Responsable Responsable = x;
-            
-            Object fila[] = new Object[6];
-            
-            fila[0] = Responsable.getIdResponsable();
-            fila[1] = Responsable.getNombre();
-            fila[2] = Responsable.getDni();
-            fila[3] = Responsable.getDireccion();
-            fila[4] = Responsable.getEmail();
-            int estado = Responsable.getEstado();
-            if ( estado == 0){
-                fila[5] = "Inactivo";
-            }else{
-                fila[5] = "Activo";
-            }
-            
-            
-            modelo.addRow(fila);
-        }
-        sesion.getTransaction().commit();
-        sesion.close(); 
-    }
-    
-    public void actualizar(){
-        try {
-            Session sesion = HibernateUtil.getSessionFactory().openSession();
-            sesion.beginTransaction();
-            
-                Responsable res = new Responsable();
-                res.setNombre(txtNombre.getText());
-                res.setDireccion(txtDireccion.getText());
-                res.setDni(txtDNI.getText());
-                res.setEmail(txtEmail.getText());
-                
-                sesion.update(res);
-                sesion.getTransaction().commit();
-                sesion.close();
-                
-        } catch (HibernateException he){
-            JOptionPane.showMessageDialog(this, "Hay un error en los campos", "ERROR", JOptionPane.ERROR_MESSAGE);
-            he.printStackTrace();
-        }
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
@@ -597,11 +622,13 @@ public class crudResponsable extends javax.swing.JDialog {
     private javax.swing.JLabel lblEmail2;
     private javax.swing.JLabel lblMantenimientoUsuario;
     private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblTelefono;
     private javax.swing.JTable tblResponsable;
     private javax.swing.JTextField txtDNI;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtTelefono;
     private javax.swing.JTextField txtid;
     // End of variables declaration//GEN-END:variables
 }

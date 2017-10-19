@@ -85,7 +85,7 @@
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="30" y="60" width="-1" height="260"/>
+          <AbsoluteConstraints x="30" y="60" width="-1" height="330"/>
         </Constraint>
       </Constraints>
 
@@ -107,6 +107,7 @@
                               <Component id="lblDireccion" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblEmail" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblEmail2" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblTelefono" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="101" pref="101" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -125,6 +126,7 @@
                                   </Group>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
+                              <Component id="txtTelefono" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -163,6 +165,11 @@
                       <Component id="txtEmail" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="lblTelefono" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtTelefono" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblEmail2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="chkEstado" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -172,7 +179,7 @@
                       <Component id="lblEmail1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtid" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="8" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -312,12 +319,25 @@
             <Property name="selected" type="boolean" value="true"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JTextField" name="txtTelefono">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="12" style="2"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Telefono"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblTelefono">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Telefono"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="jPanel2">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="30" y="351" width="-1" height="340"/>
+          <AbsoluteConstraints x="30" y="421" width="-1" height="270"/>
         </Constraint>
       </Constraints>
 
@@ -349,7 +369,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane2" pref="275" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" pref="205" max="32767" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnGuardar" alignment="3" min="-2" max="-2" attributes="0"/>
