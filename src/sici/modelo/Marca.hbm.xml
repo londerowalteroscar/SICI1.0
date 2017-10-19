@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 18/10/2017 21:00:21 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="sici.modelo.Marca" table="marca" catalog="sicidb" optimistic-lock="version">
+        <id name="idMarca" type="java.lang.Integer">
+            <column name="id_marca" />
+            <generator class="identity" />
+        </id>
+        <property name="nombre" type="string">
+            <column name="nombre" length="45" />
+        </property>
+        <set name="articulos" table="articulo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_marca" not-null="true" />
+            </key>
+            <one-to-many class="sici.modelo.Articulo" />
+        </set>
+    </class>
+</hibernate-mapping>

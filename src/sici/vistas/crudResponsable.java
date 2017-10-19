@@ -5,6 +5,13 @@
  */
 package sici.vistas;
 
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import org.hibernate.Session;
+import sici.modelo.Responsable;
+import src.HibernateUtil;
+
 /**
  *
  * @author londe
@@ -14,10 +21,18 @@ public class crudResponsable extends javax.swing.JDialog {
     /**
      * Creates new form crudResponsable
      */
+    Session sesion = HibernateUtil.getSessionFactory().openSession();
+    
     public crudResponsable(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.setLocationRelativeTo(null);
+        cargarTabla();
+        limpiar();
+        
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -28,11 +43,9 @@ public class crudResponsable extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
-        btnAgregar = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
-        btnModificar = new javax.swing.JButton();
-        btnBuscar = new javax.swing.JButton();
         lblMantenimientoUsuario = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         lblNombre = new javax.swing.JLabel();
@@ -42,60 +55,55 @@ public class crudResponsable extends javax.swing.JDialog {
         txtNombre = new javax.swing.JTextField();
         txtDNI = new javax.swing.JTextField();
         txtDireccion = new javax.swing.JTextField();
+        txtid = new javax.swing.JTextField();
+        jPanel4 = new javax.swing.JPanel();
+        btnAgregar = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
+        lblEmail1 = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
+        lblEmail2 = new javax.swing.JLabel();
+        chkEstado = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
-        btnValidar = new javax.swing.JButton();
-        btnAceptar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblResponsable = new javax.swing.JTable();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        btnAgregar.setBackground(new java.awt.Color(51, 255, 0));
-        btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
-        btnAgregar.setText("Agregar");
-
-        btnEliminar.setBackground(new java.awt.Color(255, 51, 51));
-        btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
-        btnEliminar.setText("Eliminar");
-
-        btnModificar.setBackground(new java.awt.Color(255, 204, 51));
-        btnModificar.setForeground(new java.awt.Color(255, 255, 255));
-        btnModificar.setText("Modificar");
-
-        btnBuscar.setBackground(new java.awt.Color(51, 51, 255));
-        btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
-        btnBuscar.setText("Buscar");
+        setTitle("Mantenimiento Responsable");
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(btnAgregar)
-                .addGap(18, 18, 18)
-                .addComponent(btnEliminar)
-                .addGap(18, 18, 18)
-                .addComponent(btnModificar)
-                .addGap(18, 18, 18)
-                .addComponent(btnBuscar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgregar)
-                    .addComponent(btnEliminar)
-                    .addComponent(btnModificar)
-                    .addComponent(btnBuscar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGap(0, 44, Short.MAX_VALUE)
         );
+
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(554, 336, -1, -1));
 
         lblMantenimientoUsuario.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         lblMantenimientoUsuario.setText("Mantenimiento de Responsable");
+        getContentPane().add(lblMantenimientoUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(62, 12, -1, -1));
 
         lblNombre.setText("Nombre");
 
@@ -119,8 +127,52 @@ public class crudResponsable extends javax.swing.JDialog {
         txtDireccion.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
         txtDireccion.setText("Dirección");
 
+        txtid.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
+        txtid.setText("Código");
+        txtid.setEnabled(false);
+
+        btnAgregar.setBackground(new java.awt.Color(51, 255, 0));
+        btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
+
+        btnBuscar.setBackground(new java.awt.Color(51, 51, 255));
+        btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscar.setText("Buscar");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
+                .addGap(10, 10, 10))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnAgregar)
+                .addGap(18, 18, 18)
+                .addComponent(btnBuscar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        lblEmail1.setText("Código");
+
         txtEmail.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
         txtEmail.setText("E-mail");
+
+        lblEmail2.setText("Estado");
+
+        chkEstado.setSelected(true);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -128,58 +180,69 @@ public class crudResponsable extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNombre)
-                    .addComponent(lblDNI)
-                    .addComponent(lblDireccion)
-                    .addComponent(lblEmail))
-                .addGap(101, 101, 101)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtEmail)
-                    .addComponent(txtDireccion, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                    .addComponent(txtDNI)
-                    .addComponent(txtNombre))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblEmail1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
+                        .addComponent(txtid, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNombre)
+                            .addComponent(lblDNI)
+                            .addComponent(lblDireccion)
+                            .addComponent(lblEmail)
+                            .addComponent(lblEmail2))
+                        .addGap(101, 101, 101)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtEmail)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(chkEstado))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txtDireccion, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+                                        .addComponent(txtDNI)
+                                        .addComponent(txtNombre)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNombre)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblNombre)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblDNI)
+                            .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblDireccion)
+                            .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDNI)
-                    .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDireccion)
-                    .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblEmail)
                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEmail2)
+                    .addComponent(chkEstado))
+                .addGap(22, 22, 22)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEmail1)
+                    .addComponent(txtid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
-        btnValidar.setBackground(new java.awt.Color(153, 153, 153));
-        btnValidar.setForeground(new java.awt.Color(255, 255, 255));
-        btnValidar.setText("Validar");
-        btnValidar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnValidarActionPerformed(evt);
-            }
-        });
-
-        btnAceptar.setBackground(new java.awt.Color(153, 153, 153));
-        btnAceptar.setForeground(new java.awt.Color(255, 255, 255));
-        btnAceptar.setText("Aceptar");
-        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAceptarActionPerformed(evt);
-            }
-        });
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 56, -1, 260));
 
         btnGuardar.setBackground(new java.awt.Color(153, 153, 153));
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
@@ -193,63 +256,68 @@ public class crudResponsable extends javax.swing.JDialog {
         btnCancelar.setBackground(new java.awt.Color(153, 153, 153));
         btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
+        btnEliminar.setBackground(new java.awt.Color(255, 51, 51));
+        btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
+        btnEliminar.setText("Eliminar");
+
+        btnModificar.setBackground(new java.awt.Color(255, 204, 51));
+        btnModificar.setForeground(new java.awt.Color(255, 255, 255));
+        btnModificar.setText("Modificar");
+
+        tblResponsable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(tblResponsable);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(btnValidar)
-                .addGap(18, 18, 18)
-                .addComponent(btnGuardar)
-                .addGap(18, 18, 18)
-                .addComponent(btnAceptar)
-                .addGap(18, 18, 18)
-                .addComponent(btnCancelar)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnGuardar)
+                        .addGap(26, 26, 26)
+                        .addComponent(btnEliminar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnModificar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCancelar))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnValidar)
-                    .addComponent(btnAceptar)
                     .addComponent(btnGuardar)
-                    .addComponent(btnCancelar))
+                    .addComponent(btnCancelar)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnModificar))
                 .addGap(15, 15, 15))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(45, 45, 45)
-                            .addComponent(lblMantenimientoUsuario))
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(24, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(lblMantenimientoUsuario)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -258,17 +326,57 @@ public class crudResponsable extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreActionPerformed
 
-    private void btnValidarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnValidarActionPerformed
-
-    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAceptarActionPerformed
-
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
+        try {
+            sesion.beginTransaction();
+                Responsable res = new Responsable();
+                res.setNombre(txtNombre.getText());
+                res.setDireccion(txtDireccion.getText());
+                res.setDni(txtDNI.getText());
+                res.setEmail(txtEmail.getText());
+                if(chkEstado.isSelected()){
+                    res.setEstado(1);
+                }else{
+                    res.setEstado(0);
+                }
+                
+                sesion.save(res);
+                sesion.getTransaction().commit();
+                sesion.close();
+                
+                cargarTabla();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Hay un error en los campos", "ERROR", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        // TODO add your handling code here:
+        txtNombre.setText("");
+        txtNombre.setEnabled(true);
+        
+        txtDNI.setText("");
+        txtDNI.setEnabled(true);
+        
+        txtDireccion.setText("");
+        txtDireccion.setEnabled(true);
+        
+        txtEmail.setText("");
+        txtEmail.setEnabled(true);
+        
+        txtid.setText("");
+        
+        btnGuardar.setEnabled(true);
+        
+        chkEstado.setEnabled(true);
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -311,27 +419,95 @@ public class crudResponsable extends javax.swing.JDialog {
             }
         });
     }
+    
+    public void limpiar(){
+        txtNombre.setText("");
+        txtNombre.setEnabled(false);
+        
+        txtDNI.setText("");
+        txtDNI.setEnabled(false);
+        
+        txtDireccion.setText("");
+        txtDireccion.setEnabled(false);
+        
+        txtEmail.setText("");
+        txtEmail.setEnabled(false);
+        
+        txtid.setText("");
+        
+        btnGuardar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnModificar.setEnabled(false);
+        
+        chkEstado.setEnabled(false);
+    }
+    
+    public void cargarTabla(){
+        DefaultTableModel modelo = new DefaultTableModel();
+        tblResponsable.setModel(modelo);
+        modelo.addColumn("id");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("DNI");
+        modelo.addColumn("Dirección");
+        modelo.addColumn("E-mail");
+        modelo.addColumn("Estado");
+        
+        List<Responsable>listaResponsables = null;
+        
+        sesion.beginTransaction();
+        listaResponsables = sesion.createQuery("from Responsable").list();
+        
+        for  (Responsable x : listaResponsables){
+            Responsable Responsable = x;
+            
+            Object fila[] = new Object[6];
+            
+            fila[0] = Responsable.getIdResponsable();
+            fila[1] = Responsable.getNombre();
+            fila[2] = Responsable.getDni();
+            fila[3] = Responsable.getDireccion();
+            fila[4] = Responsable.getEmail();
+            int estado = Responsable.getEstado();
+            if ( estado == 0){
+                fila[5] = "Inactivo";
+            }else{
+                fila[5] = "Activo";
+            }
+            
+            
+            modelo.addRow(fila);
+        }
+        sesion.getTransaction().commit();
+        sesion.close(); 
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnModificar;
-    private javax.swing.JButton btnValidar;
+    private javax.swing.JCheckBox chkEstado;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblDNI;
     private javax.swing.JLabel lblDireccion;
     private javax.swing.JLabel lblEmail;
+    private javax.swing.JLabel lblEmail1;
+    private javax.swing.JLabel lblEmail2;
     private javax.swing.JLabel lblMantenimientoUsuario;
     private javax.swing.JLabel lblNombre;
+    private javax.swing.JTable tblResponsable;
     private javax.swing.JTextField txtDNI;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtid;
     // End of variables declaration//GEN-END:variables
 }

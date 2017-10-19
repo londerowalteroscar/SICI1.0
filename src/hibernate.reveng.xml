@@ -41,5 +41,12 @@ Contributor(s):
 -->
 <hibernate-reverse-engineering>
   <schema-selection match-catalog="sicidb"/>
+  <table-filter match-name="unidad"/>
+  <table-filter match-name="marca"/>
+  <table-filter match-name="responsable"/>
+  <table-filter match-name="empresa"/>
+  <table-filter match-name="empresa_has_articulo"/>
   <table-filter match-name="usuario"/>
+  <table-filter match-name="almacen"/>
+  <table-filter match-name="articulo"/>
 </hibernate-reverse-engineering>

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 18/10/2017 21:00:21 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="sici.modelo.Articulo" table="articulo" catalog="sicidb" optimistic-lock="version">
+        <id name="idArticulo" type="int">
+            <column name="id_articulo" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="marca" class="sici.modelo.Marca" fetch="select">
+            <column name="id_marca" not-null="true" />
+        </many-to-one>
+        <many-to-one name="unidad" class="sici.modelo.Unidad" fetch="select">
+            <column name="id_unidad" not-null="true" />
+        </many-to-one>
+        <property name="precio" type="java.lang.Double">
+            <column name="precio" precision="22" scale="0" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="descripcion" length="45" />
+        </property>
+        <property name="nombre" type="string">
+            <column name="nombre" length="20" />
+        </property>
+        <property name="existencia" type="java.lang.Integer">
+            <column name="existencia" />
+        </property>
+        <property name="estockMinimo" type="java.lang.Integer">
+            <column name="estock_minimo" />
+        </property>
+        <property name="numSerie" type="string">
+            <column name="num_serie" length="20" />
+        </property>
+        <property name="estado" type="java.lang.Integer">
+            <column name="estado" />
+        </property>
+        <property name="idEmpresa" type="int">
+            <column name="id_empresa" not-null="true" />
+        </property>
+        <set name="almacens" table="almacen" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="id_articulo" not-null="true" />
+            </key>
+            <one-to-many class="sici.modelo.Almacen" />
+        </set>
+        <set name="empresas" table="empresa_has_articulo" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="articulo_id_articulo" not-null="true" />
+            </key>
+            <many-to-many entity-name="sici.modelo.Empresa">
+                <column name="empresa_id_empresa" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

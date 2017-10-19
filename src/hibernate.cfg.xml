@@ -49,6 +49,13 @@ Contributor(s):
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.query.factory_class">org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory</property>
     <property name="hibernate.format_sql">true</property>
+    <mapping package="hibernate.reveng.xml"/>
+    <mapping resource="sici/modelo/Almacen.hbm.xml"/>
+    <mapping resource="sici/modelo/Empresa.hbm.xml"/>
+    <mapping resource="sici/modelo/Unidad.hbm.xml"/>
     <mapping resource="sici/modelo/Usuario.hbm.xml"/>
+    <mapping resource="sici/modelo/Responsable.hbm.xml"/>
+    <mapping resource="sici/modelo/Marca.hbm.xml"/>
+    <mapping resource="sici/modelo/Articulo.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

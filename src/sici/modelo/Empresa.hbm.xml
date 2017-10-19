@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 18/10/2017 21:00:21 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="sici.modelo.Empresa" table="empresa" catalog="sicidb" optimistic-lock="version">
+        <id name="idEmpresa" type="java.lang.Integer">
+            <column name="id_empresa" />
+            <generator class="identity" />
+        </id>
+        <property name="nombre" type="string">
+            <column name="nombre" length="45" />
+        </property>
+        <property name="cuit" type="string">
+            <column name="cuit" length="15" />
+        </property>
+        <property name="telefono" type="string">
+            <column name="telefono" length="15" />
+        </property>
+        <property name="estado" type="java.lang.Integer">
+            <column name="estado" />
+        </property>
+        <set name="articulos" table="empresa_has_articulo" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="empresa_id_empresa" not-null="true" />
+            </key>
+            <many-to-many entity-name="sici.modelo.Articulo">
+                <column name="articulo_id_articulo" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

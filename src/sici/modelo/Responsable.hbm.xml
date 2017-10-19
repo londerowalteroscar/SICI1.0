@@ -3,19 +3,19 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 18/10/2017 21:00:21 by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="sici.modelo.Usuario" table="usuario" catalog="sicidb" optimistic-lock="version">
-        <id name="idUsuario" type="java.lang.Integer">
-            <column name="id_usuario" />
-            <generator class="identity" />
+    <class name="sici.modelo.Responsable" table="responsable" catalog="sicidb" optimistic-lock="version">
+        <id name="idResponsable" type="int">
+            <column name="id_responsable" />
+            <generator class="assigned" />
         </id>
-        <property name="nombreUsuario" type="string">
-            <column name="nombre_usuario" length="20" />
-        </property>
-        <property name="contrasena" type="string">
-            <column name="contrasena" length="10" />
+        <property name="estado" type="java.lang.Integer">
+            <column name="estado" />
         </property>
         <property name="nombre" type="string">
             <column name="nombre" length="45" />
+        </property>
+        <property name="direccion" type="string">
+            <column name="direccion" length="45" />
         </property>
         <property name="dni" type="string">
             <column name="dni" length="10" />
@@ -26,15 +26,9 @@
         <property name="telefono" type="string">
             <column name="telefono" length="15" />
         </property>
-        <property name="estado" type="java.lang.Integer">
-            <column name="estado" />
-        </property>
-        <property name="direccion" type="string">
-            <column name="direccion" length="45" />
-        </property>
         <set name="almacens" table="almacen" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="id_usuario" not-null="true" />
+                <column name="id_responsable" not-null="true" />
             </key>
             <one-to-many class="sici.modelo.Almacen" />
         </set>

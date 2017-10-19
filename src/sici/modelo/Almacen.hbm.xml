@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 18/10/2017 21:00:21 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="sici.modelo.Almacen" table="almacen" catalog="sicidb" optimistic-lock="version">
+        <id name="idMovimiento" type="java.lang.Integer">
+            <column name="id_movimiento" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="articulo" class="sici.modelo.Articulo" fetch="select">
+            <column name="id_articulo" not-null="true" />
+        </many-to-one>
+        <many-to-one name="responsable" class="sici.modelo.Responsable" fetch="select">
+            <column name="id_responsable" not-null="true" />
+        </many-to-one>
+        <many-to-one name="usuario" class="sici.modelo.Usuario" fetch="select">
+            <column name="id_usuario" not-null="true" />
+        </many-to-one>
+        <property name="fechaMovimiento" type="timestamp">
+            <column name="fecha_movimiento" length="19" />
+        </property>
+        <property name="tipoMovimiento" type="java.lang.Integer">
+            <column name="tipo_movimiento" />
+        </property>
+        <property name="cantidadArticulo" type="java.lang.Integer">
+            <column name="cantidad_articulo" />
+        </property>
+        <property name="numTransaccion" type="java.lang.Integer">
+            <column name="num_transaccion" />
+        </property>
+    </class>
+</hibernate-mapping>

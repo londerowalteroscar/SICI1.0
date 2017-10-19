@@ -16,6 +16,7 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -68,6 +69,11 @@ public class Principal extends javax.swing.JFrame {
         btnResponsable.setText("Responsables");
         btnResponsable.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnResponsable.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnResponsable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResponsableActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnResponsable);
 
         btnGestion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IconPack/settings-150.png"))); // NOI18N
@@ -105,6 +111,13 @@ public class Principal extends javax.swing.JFrame {
     private void btnArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArticuloActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnArticuloActionPerformed
+
+    private void btnResponsableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResponsableActionPerformed
+        // TODO add your handling code here:
+        crudResponsable crud = new crudResponsable(this, true);
+        crud.setVisible(true);
+        
+    }//GEN-LAST:event_btnResponsableActionPerformed
 
     /**
      * @param args the command line arguments
