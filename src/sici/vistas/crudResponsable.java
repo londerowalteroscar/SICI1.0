@@ -8,6 +8,7 @@ package sici.vistas;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import sici.modelo.Responsable;
 import src.HibernateUtil;
@@ -21,7 +22,7 @@ public class crudResponsable extends javax.swing.JDialog {
     /**
      * Creates new form crudResponsable
      */
-    Session sesion = HibernateUtil.getSessionFactory().openSession();
+    
     
     public crudResponsable(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -32,8 +33,28 @@ public class crudResponsable extends javax.swing.JDialog {
         
     }
     
-    
+    public void eliminar(){
+        String nombre, dni; //Crea las variables que se van imprimir
+        nombre = txtNombre.getText(); //Tomamos los valores que estan en los txt
+        dni = txtDNI.getText();
+        int elimina = JOptionPane.showConfirmDialog(this, "¿Está seguro de Eliminar: "+nombre+" "+dni+"?", "ATENCIÓN", JOptionPane.YES_NO_OPTION);
+        if(elimina == 0){// SI=0 y NO=1
+            try {
+                    Session sesion = HibernateUtil.getSessionFactory().openSession();
+                    sesion.beginTransaction();
 
+                    Responsable responsable = new Responsable();
+                    responsable.setEstado(0);
+                    
+
+                    sesion.update(responsable);
+                    sesion.getTransaction().commit();
+                    sesion.close();
+            } catch (HibernateException he) {
+                    he.printStackTrace();
+            }
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -242,7 +263,7 @@ public class crudResponsable extends javax.swing.JDialog {
                 .addContainerGap(8, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 56, -1, 260));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, -1, 260));
 
         btnGuardar.setBackground(new java.awt.Color(153, 153, 153));
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
@@ -265,10 +286,20 @@ public class crudResponsable extends javax.swing.JDialog {
         btnEliminar.setBackground(new java.awt.Color(255, 51, 51));
         btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnModificar.setBackground(new java.awt.Color(255, 204, 51));
         btnModificar.setForeground(new java.awt.Color(255, 255, 255));
         btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
         tblResponsable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -281,6 +312,11 @@ public class crudResponsable extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblResponsable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblResponsableMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblResponsable);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -306,8 +342,8 @@ public class crudResponsable extends javax.swing.JDialog {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
@@ -317,7 +353,7 @@ public class crudResponsable extends javax.swing.JDialog {
                 .addGap(15, 15, 15))
         );
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, -1, -1));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 351, -1, 340));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -329,6 +365,7 @@ public class crudResponsable extends javax.swing.JDialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
         try {
+            Session sesion = HibernateUtil.getSessionFactory().openSession();
             sesion.beginTransaction();
                 Responsable res = new Responsable();
                 res.setNombre(txtNombre.getText());
@@ -377,6 +414,64 @@ public class crudResponsable extends javax.swing.JDialog {
         
         chkEstado.setEnabled(true);
     }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        eliminar();
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void tblResponsableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblResponsableMouseClicked
+        // TODO add your handling code here:
+        btnGuardar.setEnabled(false);
+        txtNombre.setEnabled(true);
+        txtDNI.setEnabled(true);
+        txtDireccion.setEnabled(true);
+        txtEmail.setEnabled(true);
+        
+        
+        btnEliminar.setEnabled(true);
+        btnModificar.setEnabled(true);
+        int row = tblResponsable.getSelectedRow();
+        txtid.setText(tblResponsable.getModel().getValueAt(row, 0).toString());
+        txtNombre.setText(tblResponsable.getModel().getValueAt(row, 1).toString());
+        txtDNI.setText(tblResponsable.getModel().getValueAt(row, 2).toString());
+        txtDireccion.setText(tblResponsable.getModel().getValueAt(row, 3).toString());
+        txtEmail.setText(tblResponsable.getModel().getValueAt(row, 4).toString());
+        String estado = tblResponsable.getModel().getValueAt(row, 5).toString();
+        if(estado == "Activo"){
+            chkEstado.setSelected(true);
+        }else{
+            chkEstado.setSelected(false);
+        }
+    }//GEN-LAST:event_tblResponsableMouseClicked
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        // TODO add your handling code here:
+        try {
+            Session sesion = HibernateUtil.getSessionFactory().openSession();
+            sesion.beginTransaction();
+            
+                Responsable res = new Responsable();
+                res.setNombre(txtNombre.getText());
+                res.setDireccion(txtDireccion.getText());
+                res.setDni(txtDNI.getText());
+                res.setEmail(txtEmail.getText());
+//                if(chkEstado.isSelected()){
+//                    res.setEstado(1);
+//                }else{
+//                    res.setEstado(0);
+//                }
+                
+                sesion.update(res);
+                sesion.getTransaction().commit();
+                sesion.close();
+                
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Hay un error en los campos", "ERROR", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnModificarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -443,6 +538,7 @@ public class crudResponsable extends javax.swing.JDialog {
     }
     
     public void cargarTabla(){
+        Session sesion = HibernateUtil.getSessionFactory().openSession();
         DefaultTableModel modelo = new DefaultTableModel();
         tblResponsable.setModel(modelo);
         modelo.addColumn("id");
