@@ -447,30 +447,7 @@ public class crudResponsable extends javax.swing.JDialog {
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
-        try {
-            Session sesion = HibernateUtil.getSessionFactory().openSession();
-            sesion.beginTransaction();
-            
-                Responsable res = new Responsable();
-                res.setNombre(txtNombre.getText());
-                res.setDireccion(txtDireccion.getText());
-                res.setDni(txtDNI.getText());
-                res.setEmail(txtEmail.getText());
-//                if(chkEstado.isSelected()){
-//                    res.setEstado(1);
-//                }else{
-//                    res.setEstado(0);
-//                }
-                
-                sesion.update(res);
-                sesion.getTransaction().commit();
-                sesion.close();
-                
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Hay un error en los campos", "ERROR", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
+        actualizar();
     }//GEN-LAST:event_btnModificarActionPerformed
 
     /**
@@ -575,6 +552,27 @@ public class crudResponsable extends javax.swing.JDialog {
         }
         sesion.getTransaction().commit();
         sesion.close(); 
+    }
+    
+    public void actualizar(){
+        try {
+            Session sesion = HibernateUtil.getSessionFactory().openSession();
+            sesion.beginTransaction();
+            
+                Responsable res = new Responsable();
+                res.setNombre(txtNombre.getText());
+                res.setDireccion(txtDireccion.getText());
+                res.setDni(txtDNI.getText());
+                res.setEmail(txtEmail.getText());
+                
+                sesion.update(res);
+                sesion.getTransaction().commit();
+                sesion.close();
+                
+        } catch (HibernateException he){
+            JOptionPane.showMessageDialog(this, "Hay un error en los campos", "ERROR", JOptionPane.ERROR_MESSAGE);
+            he.printStackTrace();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
