@@ -5,6 +5,7 @@
  */
 package sici.vistas;
 
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.hibernate.HibernateException;
@@ -41,21 +42,76 @@ public class buscarResponsable extends javax.swing.JDialog {
     }
     private void buscar() {
         try {
+            Session sesion = HibernateUtil.getSessionFactory().openSession();
+            
+            DefaultTableModel modelo = new DefaultTableModel();
+            jtbTabla.setModel(modelo);
+            modelo.addColumn("id");
+            modelo.addColumn("Estado");
+            modelo.addColumn("Nombre");
+            modelo.addColumn("Direccion");
+            modelo.addColumn("DNI");
+            modelo.addColumn("E-mail");
+            modelo.addColumn("Telefono");
+            List<Responsable>listaResponsables = null;
+
+            sesion.beginTransaction();
+            listaResponsables = sesion.createQuery("from Responsable").list();
             if(rdbCodigo.isSelected()){
-                int id;
-                id = Integer.parseInt(txtBuscar.getText());
-
-                Session sesion = HibernateUtil.getSessionFactory().openSession();
-                sesion.beginTransaction();
-
-                Responsable res = (Responsable) sesion.get(Responsable.class, id);
                 
-                res.set
+                Responsable res = new Responsable();
+                for  (Responsable x : listaResponsables){
+                    Responsable Responsable = x;
+                    Object fila[] = new Object[50];
+                    int id = Integer.parseInt(txtBuscar.getText());
+                    if((int)id == (int)Responsable.getIdResponsable()){
+                        fila[0] = Responsable.getIdResponsable();
+                
+                        int estado = Responsable.getEstado();
+                        if ( estado == 0){
+                            fila[1] = "Inactivo";
+                        }else{
+                            fila[1] = "Activo";
+                        }
+                            fila[2] = Responsable.getNombre();
+                            fila[3] = Responsable.getDireccion();
+                            fila[4] = Responsable.getDni();
+                            fila[5] = Responsable.getEmail();
+                            fila[6] = Responsable.getTelefono();
+                            modelo.addRow(fila);
+                    }
+                }
                 sesion.getTransaction().commit();
                 sesion.close();
+            }
+            
+            if(rdbDNI.isSelected()){
+                int idd = Integer.parseInt(txtBuscar.getText());
+                Responsable res = new Responsable();
+                for  (Responsable x : listaResponsables){
+                    Responsable Responsable = x;
+                    Object fila[] = new Object[50];
+                    if((int)idd == Integer.parseInt(Responsable.getDni())){
+                        fila[0] = Responsable.getIdResponsable();
+                
+                        int estado = Responsable.getEstado();
+                        if ( estado == 0){
+                            fila[1] = "Inactivo";
+                        }else{
+                            fila[1] = "Activo";
+                        }
+                            fila[2] = Responsable.getNombre();
+                            fila[3] = Responsable.getDireccion();
+                            fila[4] = Responsable.getDni();
+                            fila[5] = Responsable.getEmail();
+                            fila[6] = Responsable.getTelefono();
+                            modelo.addRow(fila);
+                    }
                 }
-            
-            
+                sesion.getTransaction().commit();
+                sesion.close();
+            }
+                
         } catch (HibernateException e) {
             e.printStackTrace();
         }
@@ -115,6 +171,11 @@ public class buscarResponsable extends javax.swing.JDialog {
         txtBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtBuscarActionPerformed(evt);
+            }
+        });
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyTyped(evt);
             }
         });
 
@@ -282,6 +343,18 @@ public class buscarResponsable extends javax.swing.JDialog {
         // TODO add your handling code here:
         buscar();
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void txtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyTyped
+        // TODO add your handling code here:
+        if(rdbCodigo.isSelected() || rdbDNI.isSelected()){
+            int c = evt.getKeyChar();
+            if (!Character.isDigit(c) && c != evt.VK_DELETE && c != evt.VK_BACK_SPACE){
+                evt.consume();
+                JOptionPane.showMessageDialog(this, "Solo nuemeros");
+            }
+        }
+        
+    }//GEN-LAST:event_txtBuscarKeyTyped
 
     /**
      * @param args the command line arguments

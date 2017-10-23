@@ -305,6 +305,11 @@ public class crudResponsable extends javax.swing.JDialog {
 
         txtDNI.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
         txtDNI.setText("DNI");
+        txtDNI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDNIActionPerformed(evt);
+            }
+        });
         txtDNI.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtDNIKeyPressed(evt);
@@ -684,6 +689,10 @@ public class crudResponsable extends javax.swing.JDialog {
     private void txtEmailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmailFocusLost
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEmailFocusLost
+
+    private void txtDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDNIActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDNIActionPerformed
 
     /**
      * @param args the command line arguments
