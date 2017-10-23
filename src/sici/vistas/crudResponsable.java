@@ -6,6 +6,8 @@
 package sici.vistas;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.hibernate.HibernateException;
@@ -33,6 +35,7 @@ public class crudResponsable extends javax.swing.JDialog {
         
     }
     
+    
     public void eliminar(){
         String nombre, dni; //Crea las variables que se van imprimir
         nombre = txtNombre.getText(); //Tomamos los valores que estan en los txt
@@ -43,10 +46,15 @@ public class crudResponsable extends javax.swing.JDialog {
                     Session sesion = HibernateUtil.getSessionFactory().openSession();
                     sesion.beginTransaction();
 
-                    Responsable responsable = new Responsable();
-                    responsable.setEstado(0);
-                    
-                    sesion.update(responsable);
+                    Responsable res = new Responsable();
+                    res.setIdResponsable(Integer.parseInt(txtid.getText()));
+                    res.setNombre(txtNombre.getText());
+                    res.setDireccion(txtDireccion.getText());
+                    res.setDni(txtDNI.getText());
+                    res.setEmail(txtEmail.getText());
+                    res.setTelefono(txtTelefono.getText());
+                    res.setEstado(0);
+                    sesion.update(res);
                     sesion.getTransaction().commit();
                     sesion.close();
             } catch (HibernateException he) {
@@ -79,6 +87,8 @@ public class crudResponsable extends javax.swing.JDialog {
         btnModificar.setEnabled(false);
         
         chkEstado.setEnabled(false);
+        
+        btnGuardar.setText("Guardar");
     }
     
     public void cargarTabla(){
@@ -101,7 +111,7 @@ public class crudResponsable extends javax.swing.JDialog {
         for  (Responsable x : listaResponsables){
             Responsable Responsable = x;
             
-            Object fila[] = new Object[6];
+            Object fila[] = new Object[7];
             
             fila[0] = Responsable.getIdResponsable();
             int estado = Responsable.getEstado();
@@ -114,10 +124,7 @@ public class crudResponsable extends javax.swing.JDialog {
             fila[3] = Responsable.getDireccion();
             fila[4] = Responsable.getDni();
             fila[5] = Responsable.getEmail();
-            fila[5] = Responsable.getTelefono();
-            
-            
-            
+            fila[6] = Responsable.getTelefono();
             modelo.addRow(fila);
         }
         sesion.getTransaction().commit();
@@ -127,6 +134,38 @@ public class crudResponsable extends javax.swing.JDialog {
     public void actualizar() {
         try {
             Session sesion = HibernateUtil.getSessionFactory().openSession();
+            sesion.clear();
+            sesion.beginTransaction();
+                
+                Responsable res = new Responsable();
+                res.setIdResponsable(Integer.parseInt(txtid.getText()));
+                res.setNombre(txtNombre.getText());
+                res.setDireccion(txtDireccion.getText());
+                res.setDni(txtDNI.getText());
+                res.setEmail(txtEmail.getText());
+                res.setTelefono(txtTelefono.getText());
+                if(chkEstado.isSelected()){
+                    res.setEstado(1);
+                }else{
+                    res.setEstado(0);
+                }
+                
+                sesion.update(res);
+                sesion.getTransaction().commit();
+                sesion.close();
+                
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(this, "Hay un error en los campos", "ERROR", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+        cargarTabla();
+        limpiar();
+    }
+    
+    public void guardar(){
+        try {
+            
+            Session sesion = HibernateUtil.getSessionFactory().openSession();
             sesion.beginTransaction();
             
                 Responsable res = new Responsable();
@@ -134,16 +173,46 @@ public class crudResponsable extends javax.swing.JDialog {
                 res.setDireccion(txtDireccion.getText());
                 res.setDni(txtDNI.getText());
                 res.setEmail(txtEmail.getText());
+                res.setTelefono(txtTelefono.getText());
+                if(chkEstado.isSelected()){
+                    res.setEstado(1);
+                }else{
+                    res.setEstado(0);
+                }
                 
-                sesion.update(res);
+                sesion.save(res);
                 sesion.getTransaction().commit();
                 sesion.close();
                 
-        } catch (HibernateException he){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Hay un error en los campos", "ERROR", JOptionPane.ERROR_MESSAGE);
-            he.printStackTrace();
+            e.printStackTrace();
         }
         cargarTabla();
+        limpiar();
+    }
+    
+    public void activar(){
+        btnGuardar.setEnabled(true);
+        btnGuardar.setText("Actualizar");
+        txtNombre.setEnabled(true);
+        txtDNI.setEnabled(true);
+        txtDireccion.setEnabled(true);
+        txtEmail.setEnabled(true);
+        txtTelefono.setEnabled(true);
+    }
+    
+    public boolean validarEmail(String email){
+        //pattern es una clase de java
+        Pattern pattern = Pattern.compile("([a-z0-9]+(\\.?[a-z0-9])*)+@(([a-z]+)\\.([a-z]+))+");
+
+        Matcher mather = pattern.matcher(email);
+ 
+        if (mather.find()) {
+            return true;
+        } else {
+            return false;
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -236,6 +305,14 @@ public class crudResponsable extends javax.swing.JDialog {
 
         txtDNI.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
         txtDNI.setText("DNI");
+        txtDNI.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtDNIKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDNIKeyTyped(evt);
+            }
+        });
 
         txtDireccion.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
         txtDireccion.setText("Dirección");
@@ -256,6 +333,11 @@ public class crudResponsable extends javax.swing.JDialog {
         btnBuscar.setBackground(new java.awt.Color(51, 51, 255));
         btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -282,6 +364,16 @@ public class crudResponsable extends javax.swing.JDialog {
 
         txtEmail.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
         txtEmail.setText("E-mail");
+        txtEmail.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtEmailFocusLost(evt);
+            }
+        });
+        txtEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmailActionPerformed(evt);
+            }
+        });
 
         lblEmail2.setText("Estado");
 
@@ -427,20 +519,19 @@ public class crudResponsable extends javax.swing.JDialog {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnGuardar)
-                        .addGap(26, 26, 26)
-                        .addComponent(btnEliminar)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnModificar)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnCancelar))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(btnGuardar)
+                .addGap(26, 26, 26)
+                .addComponent(btnEliminar)
+                .addGap(18, 18, 18)
+                .addComponent(btnModificar)
+                .addGap(18, 18, 18)
+                .addComponent(btnCancelar)
+                .addContainerGap(176, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jScrollPane2)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -456,7 +547,7 @@ public class crudResponsable extends javax.swing.JDialog {
                 .addGap(15, 15, 15))
         );
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 421, -1, 270));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 421, 560, 270));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -467,29 +558,47 @@ public class crudResponsable extends javax.swing.JDialog {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-        try {
-            Session sesion = HibernateUtil.getSessionFactory().openSession();
-            sesion.beginTransaction();
-                Responsable res = new Responsable();
-                res.setNombre(txtNombre.getText());
-                res.setDireccion(txtDireccion.getText());
-                res.setDni(txtDNI.getText());
-                res.setEmail(txtEmail.getText());
-                if(chkEstado.isSelected()){
-                    res.setEstado(1);
-                }else{
-                    res.setEstado(0);
-                }
-                
-                sesion.save(res);
-                sesion.getTransaction().commit();
-                sesion.close();
-                
-                cargarTabla();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Hay un error en los campos", "ERROR", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+        if(txtNombre.getText().equals("") && txtDNI.getText().equals("") && txtDireccion.getText().equals("") &&
+                txtTelefono.getText().equals("") && txtEmail.getText().equals("")){
+            JOptionPane.showMessageDialog(this, "Los campos estan vacios");
+            return;
         }
+        if(txtNombre.getText().equals("")){
+            JOptionPane.showMessageDialog(this, "El Campo Nombre no puede estar vacío");
+            return;
+        }
+        
+        if(txtDNI.getText().equals("")){
+            JOptionPane.showMessageDialog(this, "El Campo DNI no puede estar vacío");
+            return;
+        }
+        
+        if(txtDireccion.getText().equals("")){
+            JOptionPane.showMessageDialog(this, "El Campo Direccion no puede estar vacío");
+            return;
+        }
+        
+        if(txtTelefono.getText().equals("")){
+            JOptionPane.showMessageDialog(this, "El Campo Telefono no puede estar vacío");
+            return;
+        }
+        
+        if(txtEmail.getText().equals("")){
+            JOptionPane.showMessageDialog(this, "El Campo E-mail no puede estar vacío");
+            return;
+        }
+        
+        if(!validarEmail(txtEmail.getText())){
+            JOptionPane.showMessageDialog(this, "El E-mail no es correcto");
+            return;
+        }
+        
+        if(btnGuardar.getText().equals("Guardar")){
+            guardar();
+        }else if(btnGuardar.getText().equals("Actualizar")){
+            actualizar();
+        }
+        
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -499,26 +608,11 @@ public class crudResponsable extends javax.swing.JDialog {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         // TODO add your handling code here:
-        txtNombre.setText("");
-        txtNombre.setEnabled(true);
-        
-        txtDNI.setText("");
-        txtDNI.setEnabled(true);
-        
-        txtDireccion.setText("");
-        txtDireccion.setEnabled(true);
-        
-        txtEmail.setText("");
-        txtEmail.setEnabled(true);
-        
-        txtTelefono.setText("");
-        txtTelefono.setEnabled(true);
-        
-        txtid.setText("");
-        
-        btnGuardar.setEnabled(true);
-        
-        chkEstado.setEnabled(true);
+        limpiar();
+        activar();
+        btnEliminar.setEnabled(false);
+        btnModificar.setEnabled(false);
+        btnGuardar.setText("Guardar");
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -528,33 +622,68 @@ public class crudResponsable extends javax.swing.JDialog {
 
     private void tblResponsableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblResponsableMouseClicked
         // TODO add your handling code here:
-        btnGuardar.setEnabled(false);
-        txtNombre.setEnabled(true);
-        txtDNI.setEnabled(true);
-        txtDireccion.setEnabled(true);
-        txtEmail.setEnabled(true);
+        limpiar();
         
-        
-        btnEliminar.setEnabled(true);
-        btnModificar.setEnabled(true);
         int row = tblResponsable.getSelectedRow();
         txtid.setText(tblResponsable.getModel().getValueAt(row, 0).toString());
-        txtNombre.setText(tblResponsable.getModel().getValueAt(row, 1).toString());
-        txtDNI.setText(tblResponsable.getModel().getValueAt(row, 2).toString());
-        txtDireccion.setText(tblResponsable.getModel().getValueAt(row, 3).toString());
-        txtEmail.setText(tblResponsable.getModel().getValueAt(row, 4).toString());
-        String estado = tblResponsable.getModel().getValueAt(row, 5).toString();
-        if(estado == "Activo"){
+        String estado = tblResponsable.getModel().getValueAt(row, 1).toString();
+        if("Activo".equals(estado)){
             chkEstado.setSelected(true);
+            btnEliminar.setEnabled(true);
+            btnModificar.setEnabled(true);
         }else{
             chkEstado.setSelected(false);
+            btnEliminar.setEnabled(false);
+            btnModificar.setEnabled(false);
         }
+        txtNombre.setText(tblResponsable.getModel().getValueAt(row, 2).toString());
+        txtDNI.setText(tblResponsable.getModel().getValueAt(row, 4).toString());
+        txtDireccion.setText(tblResponsable.getModel().getValueAt(row, 3).toString());
+        txtEmail.setText(tblResponsable.getModel().getValueAt(row, 5).toString());
+        txtTelefono.setText(tblResponsable.getModel().getValueAt(row, 6).toString());
+
     }//GEN-LAST:event_tblResponsableMouseClicked
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
-        actualizar();
+         int row = tblResponsable.getSelectedRow();
+        if(tblResponsable.getModel().getValueAt(row, 1).toString().equals("Activo")){
+            activar();
+        btnModificar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        }else{
+            JOptionPane.showMessageDialog(this, "Solo se pueden modificar usuarios Activos.");
+        }
+        
     }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // TODO add your handling code here:
+        buscarResponsable buscar = new buscarResponsable(null, true);
+        buscar.setVisible(true);
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void txtDNIKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDNIKeyPressed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txtDNIKeyPressed
+
+    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmailActionPerformed
+
+    private void txtDNIKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDNIKeyTyped
+        // TODO add your handling code here:
+        int c = evt.getKeyChar();
+        if (!Character.isDigit(c) && c != evt.VK_DELETE && c != evt.VK_BACK_SPACE){
+            evt.consume();
+            JOptionPane.showMessageDialog(this, "Solo nuemeros");
+        }
+    }//GEN-LAST:event_txtDNIKeyTyped
+
+    private void txtEmailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmailFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmailFocusLost
 
     /**
      * @param args the command line arguments

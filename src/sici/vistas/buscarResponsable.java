@@ -5,6 +5,13 @@
  */
 package sici.vistas;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import sici.modelo.Responsable;
+import src.HibernateUtil;
+
 /**
  *
  * @author londe
@@ -17,6 +24,41 @@ public class buscarResponsable extends javax.swing.JDialog {
     public buscarResponsable(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.setLocationRelativeTo(null);
+        crearTabla();
+    }
+    public void crearTabla() {
+        Session sesion = HibernateUtil.getSessionFactory().openSession();
+        DefaultTableModel modelo = new DefaultTableModel();
+        jtbTabla.setModel(modelo);
+        modelo.addColumn("id");
+        modelo.addColumn("Estado");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Direccion");
+        modelo.addColumn("DNI");
+        modelo.addColumn("E-mail");
+        modelo.addColumn("Telefono");
+    }
+    private void buscar() {
+        try {
+            if(rdbCodigo.isSelected()){
+                int id;
+                id = Integer.parseInt(txtBuscar.getText());
+
+                Session sesion = HibernateUtil.getSessionFactory().openSession();
+                sesion.beginTransaction();
+
+                Responsable res = (Responsable) sesion.get(Responsable.class, id);
+                
+                res.set
+                sesion.getTransaction().commit();
+                sesion.close();
+                }
+            
+            
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -36,9 +78,10 @@ public class buscarResponsable extends javax.swing.JDialog {
         txtBuscar = new javax.swing.JTextField();
         rdbNombre = new javax.swing.JRadioButton();
         rdbCodigo = new javax.swing.JRadioButton();
-        rdbMarca = new javax.swing.JRadioButton();
+        rdbDNI = new javax.swing.JRadioButton();
         btnBuscar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        btnSeleccionarTodo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -62,15 +105,46 @@ public class buscarResponsable extends javax.swing.JDialog {
 
         txtBuscar.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
         txtBuscar.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        txtBuscar.setText("Nombre, Código, Marca.");
+        txtBuscar.setText("Nombre, DNI, Código");
+        txtBuscar.setEnabled(false);
+        txtBuscar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtBuscarMouseClicked(evt);
+            }
+        });
+        txtBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarActionPerformed(evt);
+            }
+        });
 
         rdbNombre.setText("Nombre");
+        rdbNombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbNombreActionPerformed(evt);
+            }
+        });
 
         rdbCodigo.setText("Código");
+        rdbCodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbCodigoActionPerformed(evt);
+            }
+        });
 
-        rdbMarca.setText("Marca");
+        rdbDNI.setText("DNI");
+        rdbDNI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbDNIActionPerformed(evt);
+            }
+        });
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -79,15 +153,16 @@ public class buscarResponsable extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtBuscar)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 494, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(rdbNombre)
                         .addGap(18, 18, 18)
                         .addComponent(rdbCodigo)
                         .addGap(18, 18, 18)
-                        .addComponent(rdbMarca)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnBuscar)
+                        .addComponent(rdbDNI)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -95,17 +170,25 @@ public class buscarResponsable extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rdbNombre)
                     .addComponent(rdbCodigo)
-                    .addComponent(rdbMarca)
+                    .addComponent(rdbDNI))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
+        btnSeleccionarTodo.setText("Seliccionr Todo");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,12 +205,15 @@ public class buscarResponsable extends javax.swing.JDialog {
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnAceptar)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnCancelar)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(332, 332, 332)
+                                .addComponent(btnSeleccionarTodo)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnAceptar)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnCancelar)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -137,17 +223,65 @@ public class buscarResponsable extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
-                    .addComponent(btnAceptar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAceptar)
+                    .addComponent(btnSeleccionarTodo))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void rdbNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbNombreActionPerformed
+        // TODO add your handling code here:
+        rdbNombre.setSelected(true);
+        rdbDNI.setSelected(false);
+        rdbCodigo.setSelected(false);
+    }//GEN-LAST:event_rdbNombreActionPerformed
+
+    private void rdbCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbCodigoActionPerformed
+        // TODO add your handling code here:
+        rdbNombre.setSelected(false);
+        rdbDNI.setSelected(false);
+        rdbCodigo.setSelected(true);
+    }//GEN-LAST:event_rdbCodigoActionPerformed
+
+    private void rdbDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbDNIActionPerformed
+        // TODO add your handling code here:
+        rdbNombre.setSelected(false);
+        rdbDNI.setSelected(true);
+        rdbCodigo.setSelected(false);
+    }//GEN-LAST:event_rdbDNIActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void txtBuscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtBuscarMouseClicked
+        // TODO add your handling code here:
+        if(rdbCodigo.isSelected() || rdbDNI.isSelected() || rdbNombre.isSelected()){
+            txtBuscar.setText("");
+            txtBuscar.setEnabled(true);
+        }else{
+            JOptionPane.showMessageDialog(this, "Primero seleccione un item a buscar.");
+        }
+        
+    }//GEN-LAST:event_txtBuscarMouseClicked
+
+    private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txtBuscarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        // TODO add your handling code here:
+        buscar();
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -195,12 +329,13 @@ public class buscarResponsable extends javax.swing.JDialog {
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnSeleccionarTodo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jtbTabla;
     private javax.swing.JRadioButton rdbCodigo;
-    private javax.swing.JRadioButton rdbMarca;
+    private javax.swing.JRadioButton rdbDNI;
     private javax.swing.JRadioButton rdbNombre;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
