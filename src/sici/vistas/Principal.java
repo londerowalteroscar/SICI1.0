@@ -119,6 +119,9 @@ public class Principal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnResponsableActionPerformed
 
+    public void pruebaGithub(){
+        System.out.println("Prueba Github");
+    }
     /**
      * @param args the command line arguments
      */
