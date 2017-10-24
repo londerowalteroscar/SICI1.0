@@ -57,12 +57,14 @@ public class buscarResponsable extends javax.swing.JDialog {
 
             sesion.beginTransaction();
             listaResponsables = sesion.createQuery("from Responsable").list();
+            //Buscar Código////////////////////////////////////////////////////
             if(rdbCodigo.isSelected()){
                 
                 Responsable res = new Responsable();
                 for  (Responsable x : listaResponsables){
                     Responsable Responsable = x;
-                    Object fila[] = new Object[50];
+                    
+                    Object fila[] = new Object[7];
                     int id = Integer.parseInt(txtBuscar.getText());
                     if((int)id == (int)Responsable.getIdResponsable()){
                         fila[0] = Responsable.getIdResponsable();
@@ -84,14 +86,42 @@ public class buscarResponsable extends javax.swing.JDialog {
                 sesion.getTransaction().commit();
                 sesion.close();
             }
-            
+            //Buscar DNI////////////////////////////////////////////////////
             if(rdbDNI.isSelected()){
-                int idd = Integer.parseInt(txtBuscar.getText());
+                String dni = txtBuscar.getText();
                 Responsable res = new Responsable();
                 for  (Responsable x : listaResponsables){
                     Responsable Responsable = x;
-                    Object fila[] = new Object[50];
-                    if((int)idd == Integer.parseInt(Responsable.getDni())){
+                    Object fila[] = new Object[7];
+                    if(dni.equals(Responsable.getDni())){
+                        fila[0] = Responsable.getIdResponsable();
+                
+                        int estado = Responsable.getEstado();
+                        if ( estado == 0){
+                            fila[1] = "Inactivo";
+                        }else{
+                            fila[1] = "Activo";
+                        }
+                            fila[2] = Responsable.getNombre();
+                            fila[3] = Responsable.getDireccion();
+                            fila[4] = Responsable.getDni();
+                            fila[5] = Responsable.getEmail();
+                            fila[6] = Responsable.getTelefono();
+                            modelo.addRow(fila);
+                    }
+                }
+                sesion.getTransaction().commit();
+                sesion.close();
+            }
+            
+            //Buscar DNI////////////////////////////////////////////////////
+            if(rdbNombre.isSelected()){
+                String nombre = txtBuscar.getText();
+                Responsable res = new Responsable();
+                for  (Responsable x : listaResponsables){
+                    Responsable Responsable = x;
+                    Object fila[] = new Object[7];
+                    if(nombre.equals(Responsable.getDni())){
                         fila[0] = Responsable.getIdResponsable();
                 
                         int estado = Responsable.getEstado();
@@ -155,6 +185,11 @@ public class buscarResponsable extends javax.swing.JDialog {
         jScrollPane1.setViewportView(jtbTabla);
 
         btnAceptar.setText("Aceptar");
+        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAceptarActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jLabel1.setText("Busqueda de Responsable:");
@@ -302,6 +337,8 @@ public class buscarResponsable extends javax.swing.JDialog {
         rdbNombre.setSelected(true);
         rdbDNI.setSelected(false);
         rdbCodigo.setSelected(false);
+        txtBuscar.setEnabled(true);
+        txtBuscar.setText("");
     }//GEN-LAST:event_rdbNombreActionPerformed
 
     private void rdbCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbCodigoActionPerformed
@@ -309,6 +346,8 @@ public class buscarResponsable extends javax.swing.JDialog {
         rdbNombre.setSelected(false);
         rdbDNI.setSelected(false);
         rdbCodigo.setSelected(true);
+        txtBuscar.setEnabled(true);
+        txtBuscar.setText("");
     }//GEN-LAST:event_rdbCodigoActionPerformed
 
     private void rdbDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbDNIActionPerformed
@@ -316,6 +355,8 @@ public class buscarResponsable extends javax.swing.JDialog {
         rdbNombre.setSelected(false);
         rdbDNI.setSelected(true);
         rdbCodigo.setSelected(false);
+        txtBuscar.setEnabled(true);
+        txtBuscar.setText("");
     }//GEN-LAST:event_rdbDNIActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -328,6 +369,7 @@ public class buscarResponsable extends javax.swing.JDialog {
         if(rdbCodigo.isSelected() || rdbDNI.isSelected() || rdbNombre.isSelected()){
             txtBuscar.setText("");
             txtBuscar.setEnabled(true);
+            
         }else{
             JOptionPane.showMessageDialog(this, "Primero seleccione un item a buscar.");
         }
@@ -349,12 +391,23 @@ public class buscarResponsable extends javax.swing.JDialog {
         if(rdbCodigo.isSelected() || rdbDNI.isSelected()){
             int c = evt.getKeyChar();
             if (!Character.isDigit(c) && c != evt.VK_DELETE && c != evt.VK_BACK_SPACE){
+                if(c ==evt.VK_ENTER){
+                    buscar();
+                    return;
+                }
+
                 evt.consume();
                 JOptionPane.showMessageDialog(this, "Solo nuemeros");
             }
+            
         }
         
     }//GEN-LAST:event_txtBuscarKeyTyped
+
+    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnAceptarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -406,7 +459,7 @@ public class buscarResponsable extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jtbTabla;
+    public javax.swing.JTable jtbTabla;
     private javax.swing.JRadioButton rdbCodigo;
     private javax.swing.JRadioButton rdbDNI;
     private javax.swing.JRadioButton rdbNombre;

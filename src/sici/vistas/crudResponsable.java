@@ -666,6 +666,8 @@ public class crudResponsable extends javax.swing.JDialog {
         // TODO add your handling code here:
         buscarResponsable buscar = new buscarResponsable(null, true);
         buscar.setVisible(true);
+        
+        DefaultTableModel model = (DefaultTableModel) buscar.jtbTabla.getModel();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtDNIKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDNIKeyPressed
