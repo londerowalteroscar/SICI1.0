@@ -268,6 +268,11 @@ public class crudResponsable extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Mantenimiento Responsable");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -533,10 +538,7 @@ public class crudResponsable extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(btnCancelar)
                 .addContainerGap(176, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jScrollPane2)
-                .addContainerGap())
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -666,8 +668,6 @@ public class crudResponsable extends javax.swing.JDialog {
         // TODO add your handling code here:
         buscarResponsable buscar = new buscarResponsable(null, true);
         buscar.setVisible(true);
-        
-        DefaultTableModel model = (DefaultTableModel) buscar.jtbTabla.getModel();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtDNIKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDNIKeyPressed
@@ -695,6 +695,11 @@ public class crudResponsable extends javax.swing.JDialog {
     private void txtDNIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDNIActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDNIActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
@@ -763,7 +768,7 @@ public class crudResponsable extends javax.swing.JDialog {
     private javax.swing.JLabel lblMantenimientoUsuario;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblTelefono;
-    private javax.swing.JTable tblResponsable;
+    public javax.swing.JTable tblResponsable;
     private javax.swing.JTextField txtDNI;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtEmail;

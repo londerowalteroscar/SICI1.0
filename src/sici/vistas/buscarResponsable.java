@@ -5,9 +5,11 @@
  */
 package sici.vistas;
 
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import sici.modelo.Responsable;
@@ -42,6 +44,7 @@ public class buscarResponsable extends javax.swing.JDialog {
     }
     private void buscar() {
         try {
+            
             Session sesion = HibernateUtil.getSessionFactory().openSession();
             
             DefaultTableModel modelo = new DefaultTableModel();
@@ -58,17 +61,14 @@ public class buscarResponsable extends javax.swing.JDialog {
             sesion.beginTransaction();
             listaResponsables = sesion.createQuery("from Responsable").list();
             //Buscar Código////////////////////////////////////////////////////
+            //SELECT name FROM table_example WHERE name LIKE "%search%"
             if(rdbCodigo.isSelected()){
-                
-                Responsable res = new Responsable();
+                String id = txtBuscar.getText();
+                listaResponsables = sesion.createQuery("from Responsable where idResponsable like '%" + id +"%'" ).list();
                 for  (Responsable x : listaResponsables){
                     Responsable Responsable = x;
-                    
                     Object fila[] = new Object[7];
-                    int id = Integer.parseInt(txtBuscar.getText());
-                    if((int)id == (int)Responsable.getIdResponsable()){
                         fila[0] = Responsable.getIdResponsable();
-                
                         int estado = Responsable.getEstado();
                         if ( estado == 0){
                             fila[1] = "Inactivo";
@@ -81,7 +81,6 @@ public class buscarResponsable extends javax.swing.JDialog {
                             fila[5] = Responsable.getEmail();
                             fila[6] = Responsable.getTelefono();
                             modelo.addRow(fila);
-                    }
                 }
                 sesion.getTransaction().commit();
                 sesion.close();
@@ -89,13 +88,11 @@ public class buscarResponsable extends javax.swing.JDialog {
             //Buscar DNI////////////////////////////////////////////////////
             if(rdbDNI.isSelected()){
                 String dni = txtBuscar.getText();
-                Responsable res = new Responsable();
+                listaResponsables = sesion.createQuery("from Responsable where dni like '%" + dni +"%'" ).list();
                 for  (Responsable x : listaResponsables){
                     Responsable Responsable = x;
                     Object fila[] = new Object[7];
-                    if(dni.equals(Responsable.getDni())){
                         fila[0] = Responsable.getIdResponsable();
-                
                         int estado = Responsable.getEstado();
                         if ( estado == 0){
                             fila[1] = "Inactivo";
@@ -108,22 +105,19 @@ public class buscarResponsable extends javax.swing.JDialog {
                             fila[5] = Responsable.getEmail();
                             fila[6] = Responsable.getTelefono();
                             modelo.addRow(fila);
-                    }
                 }
                 sesion.getTransaction().commit();
                 sesion.close();
             }
             
-            //Buscar DNI////////////////////////////////////////////////////
+            //Buscar Nombre////////////////////////////////////////////////////
             if(rdbNombre.isSelected()){
                 String nombre = txtBuscar.getText();
-                Responsable res = new Responsable();
+                listaResponsables = sesion.createQuery("from Responsable where nombre like '%" + nombre +"%'" ).list();
                 for  (Responsable x : listaResponsables){
                     Responsable Responsable = x;
                     Object fila[] = new Object[7];
-                    if(nombre.equals(Responsable.getDni())){
                         fila[0] = Responsable.getIdResponsable();
-                
                         int estado = Responsable.getEstado();
                         if ( estado == 0){
                             fila[1] = "Inactivo";
@@ -136,7 +130,6 @@ public class buscarResponsable extends javax.swing.JDialog {
                             fila[5] = Responsable.getEmail();
                             fila[6] = Responsable.getTelefono();
                             modelo.addRow(fila);
-                    }
                 }
                 sesion.getTransaction().commit();
                 sesion.close();
@@ -209,6 +202,9 @@ public class buscarResponsable extends javax.swing.JDialog {
             }
         });
         txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyPressed(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtBuscarKeyTyped(evt);
             }
@@ -361,7 +357,7 @@ public class buscarResponsable extends javax.swing.JDialog {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void txtBuscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtBuscarMouseClicked
@@ -388,26 +384,51 @@ public class buscarResponsable extends javax.swing.JDialog {
 
     private void txtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyTyped
         // TODO add your handling code here:
+        int c = evt.getKeyChar();
         if(rdbCodigo.isSelected() || rdbDNI.isSelected()){
-            int c = evt.getKeyChar();
+            
+            if(c == evt.VK_ENTER){
+                buscar();
+                return;
+            }
+            buscar();
             if (!Character.isDigit(c) && c != evt.VK_DELETE && c != evt.VK_BACK_SPACE){
-                if(c ==evt.VK_ENTER){
-                    buscar();
-                    return;
-                }
-
                 evt.consume();
                 JOptionPane.showMessageDialog(this, "Solo nuemeros");
             }
-            
         }
-        
+        if(rdbNombre.isSelected()){
+            if(c == evt.VK_ENTER){
+                buscar();
+                return;
+            }
+            buscar();
+        }
     }//GEN-LAST:event_txtBuscarKeyTyped
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // TODO add your handling code here:
+        TableModel model = jtbTabla.getModel();
+        int indice = jtbTabla.getSelectedRow();
+        Object[] fila = new Object[7];
+        fila[0]=model.getValueAt(indice, 0);
+        fila[1]=model.getValueAt(indice, 1);
+        fila[2]=model.getValueAt(indice, 2);
+        fila[3]=model.getValueAt(indice, 3);
+        fila[4]=model.getValueAt(indice, 4);
+        fila[5]=model.getValueAt(indice, 5);
+        fila[6]=model.getValueAt(indice, 6);
+        
+        System.out.println(Arrays.toString(fila));
+        
+        this.setVisible(false);
         
     }//GEN-LAST:event_btnAceptarActionPerformed
+
+    private void txtBuscarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyPressed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txtBuscarKeyPressed
 
     /**
      * @param args the command line arguments
