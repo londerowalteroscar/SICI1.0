@@ -59,6 +59,7 @@ public class crudResponsable extends javax.swing.JDialog {
                     he.printStackTrace();
             }
         }
+        cargarTabla();
     }
     
     public void limpiar(){
@@ -675,6 +676,7 @@ public class crudResponsable extends javax.swing.JDialog {
         // TODO add your handling code here:
         limpiar();
         activar();
+        chkEstado.setSelected(true);
         btnEliminar.setEnabled(false);
         btnModificar.setEnabled(false);
         btnGuardar.setText("Guardar");

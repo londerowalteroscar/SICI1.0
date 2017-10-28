@@ -27,6 +27,11 @@ public class buscarResponsable extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         crearTabla();
+        btnAceptar.setEnabled(false);
+    }
+    
+    public void aceptar(){
+        
     }
     
     public void crearTabla() {
@@ -59,12 +64,11 @@ public class buscarResponsable extends javax.swing.JFrame {
             List<Responsable>listaResponsables = null;
 
             sesion.beginTransaction();
-            listaResponsables = sesion.createQuery("from Responsable").list();
             //Buscar Código////////////////////////////////////////////////////
             //SELECT name FROM table_example WHERE name LIKE "%search%"
             if(rdbCodigo.isSelected()){
                 String id = txtBuscar.getText();
-                listaResponsables = sesion.createQuery("from Responsable where idResponsable like '%" + id +"%'" ).list();
+                listaResponsables = sesion.createQuery("from Responsable where idResponsable like '" + id +"%'" ).list();
                 for  (Responsable x : listaResponsables){
                     Responsable Responsable = x;
                     Object fila[] = new Object[7];
@@ -267,6 +271,11 @@ public class buscarResponsable extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jtbTabla.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtbTablaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jtbTabla);
 
         btnAceptar.setText("Aceptar");
@@ -297,7 +306,6 @@ public class buscarResponsable extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnAceptar)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnCancelar)))))
@@ -353,7 +361,6 @@ public class buscarResponsable extends javax.swing.JFrame {
                 buscar();
                 return;
             }
-            buscar();
             if (!Character.isDigit(c) && c != evt.VK_DELETE && c != evt.VK_BACK_SPACE){
                 evt.consume();
                 JOptionPane.showMessageDialog(this, "Solo nuemeros");
@@ -364,7 +371,6 @@ public class buscarResponsable extends javax.swing.JFrame {
                 buscar();
                 return;
             }
-            buscar();
         }
     }//GEN-LAST:event_txtBuscarKeyTyped
 
@@ -402,7 +408,15 @@ public class buscarResponsable extends javax.swing.JFrame {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
-        this.dispose();
+        int salir = JOptionPane.showConfirmDialog(this, "¿Está seguro que decea salir?", "ATENCIÓN", JOptionPane.YES_NO_OPTION);
+        if(salir == 0){
+            this.dispose();
+            crudResponsable crud = new crudResponsable(null, true);
+            crud.setVisible(true);
+        }else{
+            return;
+        }
+        
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
@@ -414,8 +428,12 @@ public class buscarResponsable extends javax.swing.JFrame {
         crud.busqueda(idd);
         this.setVisible(false);
         crud.setVisible(true);
-
     }//GEN-LAST:event_btnAceptarActionPerformed
+
+    private void jtbTablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbTablaMouseClicked
+        // TODO add your handling code here:
+        btnAceptar.setEnabled(true);
+    }//GEN-LAST:event_jtbTablaMouseClicked
 
     /**
      * @param args the command line arguments
