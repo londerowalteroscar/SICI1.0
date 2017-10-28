@@ -32,11 +32,7 @@ public class crudResponsable extends javax.swing.JDialog {
         this.setLocationRelativeTo(null);
         cargarTabla();
         limpiar();
-        
     }
-
-
-    
     
     public void eliminar(){
         String nombre, dni; //Crea las variables que se van imprimir
@@ -63,7 +59,6 @@ public class crudResponsable extends javax.swing.JDialog {
                     he.printStackTrace();
             }
         }
-        cargarTabla();
     }
     
     public void limpiar(){
@@ -218,25 +213,6 @@ public class crudResponsable extends javax.swing.JDialog {
     }
     
     public void limpiarTabla(){
-        DefaultTableModel modelo = new DefaultTableModel();
-        tblResponsable.setModel(modelo);
-        modelo.addColumn("id");
-        modelo.addColumn("Estado");
-        modelo.addColumn("Nombre");
-        modelo.addColumn("Direccion");
-        modelo.addColumn("DNI");
-        modelo.addColumn("E-mail");
-        modelo.addColumn("Telefono");
-    }
-    
-    public  void   busqueda(String idd){
-        contador = Integer.parseInt(idd);
-        System.out.println(contador);
-        limpiarTabla();
-        resultado();
-    }
-    
-    public List<Responsable> resultado(){
         Session sesion = HibernateUtil.getSessionFactory().openSession();
         DefaultTableModel modelo = new DefaultTableModel();
         tblResponsable.setModel(modelo);
@@ -247,37 +223,54 @@ public class crudResponsable extends javax.swing.JDialog {
         modelo.addColumn("DNI");
         modelo.addColumn("E-mail");
         modelo.addColumn("Telefono");
-        
-        List<Responsable>listaResponsables = null;
-        
-        sesion.beginTransaction();
-        String consulta = "from Responsable where id_responsable="+contador;
-        System.out.println(consulta);
-        listaResponsables = sesion.createQuery(consulta).list();
-        
-        for  (Responsable x : listaResponsables){
-            Responsable Responsable = x;
-            
-            Object fila[] = new Object[7];
-            
-            fila[0] = Responsable.getIdResponsable();
-            int estado = Responsable.getEstado();
-            if ( estado == 0){
-                fila[1] = "Inactivo";
-            }else{
-                fila[1] = "Activo";
-            }
-            fila[2] = Responsable.getNombre();
-            fila[3] = Responsable.getDireccion();
-            fila[4] = Responsable.getDni();
-            fila[5] = Responsable.getEmail();
-            fila[6] = Responsable.getTelefono();
-            modelo.addRow(fila);
-        }
-        sesion.getTransaction().commit();
-        sesion.close(); 
-        return listaResponsables;
     }
+    
+    public  void busqueda(String idd){
+        try {
+            System.out.println(idd);
+            limpiarTabla();
+            Session sesion = HibernateUtil.getSessionFactory().openSession();
+            DefaultTableModel modelo = new DefaultTableModel();
+            tblResponsable.setModel(modelo);
+            modelo.addColumn("id");
+            modelo.addColumn("Estado");
+            modelo.addColumn("Nombre");
+            modelo.addColumn("Direccion");
+            modelo.addColumn("DNI");
+            modelo.addColumn("E-mail");
+            modelo.addColumn("Telefono");
+
+            List<Responsable>listaResponsables = null;
+
+            sesion.beginTransaction();
+            String consulta = "from Responsable where idResponsable like '%" + idd +"%'";
+            System.out.println(consulta);
+                listaResponsables = sesion.createQuery(consulta).list();
+                for  (Responsable x : listaResponsables){
+                    Responsable Responsable = x;
+                    Object fila[] = new Object[7];
+                        fila[0] = Responsable.getIdResponsable();
+                        int estado = Responsable.getEstado();
+                        if ( estado == 0){
+                            fila[1] = "Inactivo";
+                        }else{
+                            fila[1] = "Activo";
+                        }
+                        fila[2] = Responsable.getNombre();
+                        fila[3] = Responsable.getDireccion();
+                        fila[4] = Responsable.getDni();
+                        fila[5] = Responsable.getEmail();
+                        fila[6] = Responsable.getTelefono();
+                        modelo.addRow(fila);
+                }
+            sesion.getTransaction().commit();
+            sesion.close();
+        } catch (Exception e) {
+        }
+        
+    }
+    
+
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -310,7 +303,6 @@ public class crudResponsable extends javax.swing.JDialog {
         chkEstado = new javax.swing.JCheckBox();
         txtTelefono = new javax.swing.JTextField();
         lblTelefono = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
@@ -460,13 +452,6 @@ public class crudResponsable extends javax.swing.JDialog {
 
         lblTelefono.setText("Telefono");
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -500,15 +485,9 @@ public class crudResponsable extends javax.swing.JDialog {
                                         .addComponent(txtNombre)))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(txtTelefono))))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(45, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addContainerGap())))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(45, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -535,9 +514,8 @@ public class crudResponsable extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblTelefono)
-                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addGap(18, 18, 18)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEmail2)
                     .addComponent(chkEstado))
@@ -545,7 +523,7 @@ public class crudResponsable extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEmail1)
                     .addComponent(txtid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, -1, 330));
@@ -746,8 +724,9 @@ public class crudResponsable extends javax.swing.JDialog {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        buscarResponsable buscar = new buscarResponsable(null, true);
-        buscar.setVisible(true);
+        buscarResponsable pru = new buscarResponsable();
+        this.setVisible(false);
+        pru.setVisible(true);
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtDNIKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDNIKeyPressed
@@ -777,14 +756,8 @@ public class crudResponsable extends javax.swing.JDialog {
     }//GEN-LAST:event_txtDNIActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        // TODO add your handling code here:
-        
+        // TODO add your handling code here:       
     }//GEN-LAST:event_formWindowActivated
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        limpiarTabla();
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -838,7 +811,6 @@ public class crudResponsable extends javax.swing.JDialog {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JCheckBox chkEstado;
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

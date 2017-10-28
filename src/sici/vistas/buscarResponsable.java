@@ -5,7 +5,6 @@
  */
 package sici.vistas;
 
-import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -19,18 +18,17 @@ import src.HibernateUtil;
  *
  * @author londe
  */
-public class buscarResponsable extends javax.swing.JDialog {
+public class buscarResponsable extends javax.swing.JFrame {
 
     /**
-     * Creates new form buscarResponsable
+     * Creates new form prueba
      */
-    public buscarResponsable(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public buscarResponsable() {
         initComponents();
         this.setLocationRelativeTo(null);
         crearTabla();
-        
     }
+    
     public void crearTabla() {
         Session sesion = HibernateUtil.getSessionFactory().openSession();
         DefaultTableModel modelo = new DefaultTableModel();
@@ -43,6 +41,7 @@ public class buscarResponsable extends javax.swing.JDialog {
         modelo.addColumn("E-mail");
         modelo.addColumn("Telefono");
     }
+    
     private void buscar() {
         try {
             
@@ -150,10 +149,6 @@ public class buscarResponsable extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jtbTabla = new javax.swing.JTable();
-        btnAceptar = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         txtBuscar = new javax.swing.JTextField();
         rdbNombre = new javax.swing.JRadioButton();
@@ -161,31 +156,12 @@ public class buscarResponsable extends javax.swing.JDialog {
         rdbDNI = new javax.swing.JRadioButton();
         btnBuscar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtbTabla = new javax.swing.JTable();
+        btnAceptar = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jtbTabla.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jtbTabla);
-
-        btnAceptar.setText("Aceptar");
-        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAceptarActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jLabel1.setText("Busqueda de Responsable:");
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         txtBuscar.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
         txtBuscar.setHorizontalAlignment(javax.swing.JTextField.LEFT);
@@ -280,6 +256,29 @@ public class buscarResponsable extends javax.swing.JDialog {
             }
         });
 
+        jtbTabla.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jtbTabla);
+
+        btnAceptar.setText("Aceptar");
+        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAceptarActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        jLabel1.setText("Busqueda de Responsable:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -298,7 +297,7 @@ public class buscarResponsable extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(332, 468, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnAceptar)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnCancelar)))))
@@ -312,7 +311,7 @@ public class buscarResponsable extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
@@ -322,6 +321,52 @@ public class buscarResponsable extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtBuscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtBuscarMouseClicked
+        // TODO add your handling code here:
+        if(rdbCodigo.isSelected() || rdbDNI.isSelected() || rdbNombre.isSelected()){
+            txtBuscar.setText("");
+            txtBuscar.setEnabled(true);
+
+        }else{
+            JOptionPane.showMessageDialog(this, "Primero seleccione un item a buscar.");
+        }
+
+    }//GEN-LAST:event_txtBuscarMouseClicked
+
+    private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_txtBuscarActionPerformed
+
+    private void txtBuscarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyPressed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_txtBuscarKeyPressed
+
+    private void txtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyTyped
+        // TODO add your handling code here:
+        int c = evt.getKeyChar();
+        if(rdbCodigo.isSelected() || rdbDNI.isSelected()){
+
+            if(c == evt.VK_ENTER){
+                buscar();
+                return;
+            }
+            buscar();
+            if (!Character.isDigit(c) && c != evt.VK_DELETE && c != evt.VK_BACK_SPACE){
+                evt.consume();
+                JOptionPane.showMessageDialog(this, "Solo nuemeros");
+            }
+        }
+        if(rdbNombre.isSelected()){
+            if(c == evt.VK_ENTER){
+                buscar();
+                return;
+            }
+            buscar();
+        }
+    }//GEN-LAST:event_txtBuscarKeyTyped
 
     private void rdbNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbNombreActionPerformed
         // TODO add your handling code here:
@@ -350,56 +395,15 @@ public class buscarResponsable extends javax.swing.JDialog {
         txtBuscar.setText("");
     }//GEN-LAST:event_rdbDNIActionPerformed
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
-    private void txtBuscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtBuscarMouseClicked
-        // TODO add your handling code here:
-        if(rdbCodigo.isSelected() || rdbDNI.isSelected() || rdbNombre.isSelected()){
-            txtBuscar.setText("");
-            txtBuscar.setEnabled(true);
-            
-        }else{
-            JOptionPane.showMessageDialog(this, "Primero seleccione un item a buscar.");
-        }
-        
-    }//GEN-LAST:event_txtBuscarMouseClicked
-
-    private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_txtBuscarActionPerformed
-
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         buscar();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void txtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyTyped
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
-        int c = evt.getKeyChar();
-        if(rdbCodigo.isSelected() || rdbDNI.isSelected()){
-            
-            if(c == evt.VK_ENTER){
-                buscar();
-                return;
-            }
-            buscar();
-            if (!Character.isDigit(c) && c != evt.VK_DELETE && c != evt.VK_BACK_SPACE){
-                evt.consume();
-                JOptionPane.showMessageDialog(this, "Solo nuemeros");
-            }
-        }
-        if(rdbNombre.isSelected()){
-            if(c == evt.VK_ENTER){
-                buscar();
-                return;
-            }
-            buscar();
-        }
-    }//GEN-LAST:event_txtBuscarKeyTyped
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // TODO add your handling code here:
@@ -407,15 +411,11 @@ public class buscarResponsable extends javax.swing.JDialog {
         int indice = jtbTabla.getSelectedRow();
         String idd = String.valueOf(model.getValueAt(indice, 0));
         crudResponsable crud = new crudResponsable(null, true);
-        crud.busqueda(idd);        
+        crud.busqueda(idd);
         this.setVisible(false);
-        
-    }//GEN-LAST:event_btnAceptarActionPerformed
+        crud.setVisible(true);
 
-    private void txtBuscarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyPressed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_txtBuscarKeyPressed
+    }//GEN-LAST:event_btnAceptarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -443,18 +443,12 @@ public class buscarResponsable extends javax.swing.JDialog {
             java.util.logging.Logger.getLogger(buscarResponsable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
-        /* Create and display the dialog */
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                buscarResponsable dialog = new buscarResponsable(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+                new buscarResponsable().setVisible(true);
             }
         });
     }

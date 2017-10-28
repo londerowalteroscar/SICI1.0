@@ -110,6 +110,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArticuloActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnArticuloActionPerformed
 
     private void btnResponsableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResponsableActionPerformed
