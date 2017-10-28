@@ -25,7 +25,7 @@ public class crudResponsable extends javax.swing.JDialog {
      * Creates new form crudResponsable
      */
     
-    
+    public int contador = 0;
     public crudResponsable(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -34,6 +34,8 @@ public class crudResponsable extends javax.swing.JDialog {
         limpiar();
         
     }
+
+
     
     
     public void eliminar(){
@@ -214,6 +216,69 @@ public class crudResponsable extends javax.swing.JDialog {
             return false;
         }
     }
+    
+    public void limpiarTabla(){
+        DefaultTableModel modelo = new DefaultTableModel();
+        tblResponsable.setModel(modelo);
+        modelo.addColumn("id");
+        modelo.addColumn("Estado");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Direccion");
+        modelo.addColumn("DNI");
+        modelo.addColumn("E-mail");
+        modelo.addColumn("Telefono");
+    }
+    
+    public  void   busqueda(String idd){
+        contador = Integer.parseInt(idd);
+        System.out.println(contador);
+        limpiarTabla();
+        resultado();
+    }
+    
+    public List<Responsable> resultado(){
+        Session sesion = HibernateUtil.getSessionFactory().openSession();
+        DefaultTableModel modelo = new DefaultTableModel();
+        tblResponsable.setModel(modelo);
+        modelo.addColumn("id");
+        modelo.addColumn("Estado");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Direccion");
+        modelo.addColumn("DNI");
+        modelo.addColumn("E-mail");
+        modelo.addColumn("Telefono");
+        
+        List<Responsable>listaResponsables = null;
+        
+        sesion.beginTransaction();
+        String consulta = "from Responsable where id_responsable="+contador;
+        System.out.println(consulta);
+        listaResponsables = sesion.createQuery(consulta).list();
+        
+        for  (Responsable x : listaResponsables){
+            Responsable Responsable = x;
+            
+            Object fila[] = new Object[7];
+            
+            fila[0] = Responsable.getIdResponsable();
+            int estado = Responsable.getEstado();
+            if ( estado == 0){
+                fila[1] = "Inactivo";
+            }else{
+                fila[1] = "Activo";
+            }
+            fila[2] = Responsable.getNombre();
+            fila[3] = Responsable.getDireccion();
+            fila[4] = Responsable.getDni();
+            fila[5] = Responsable.getEmail();
+            fila[6] = Responsable.getTelefono();
+            modelo.addRow(fila);
+        }
+        sesion.getTransaction().commit();
+        sesion.close(); 
+        return listaResponsables;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -245,6 +310,7 @@ public class crudResponsable extends javax.swing.JDialog {
         chkEstado = new javax.swing.JCheckBox();
         txtTelefono = new javax.swing.JTextField();
         lblTelefono = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
@@ -394,6 +460,13 @@ public class crudResponsable extends javax.swing.JDialog {
 
         lblTelefono.setText("Telefono");
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -427,9 +500,15 @@ public class crudResponsable extends javax.swing.JDialog {
                                         .addComponent(txtNombre)))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(txtTelefono))))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(45, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -453,10 +532,11 @@ public class crudResponsable extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblEmail)
                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblTelefono)
-                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEmail2)
@@ -701,6 +781,11 @@ public class crudResponsable extends javax.swing.JDialog {
         
     }//GEN-LAST:event_formWindowActivated
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        limpiarTabla();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -753,6 +838,7 @@ public class crudResponsable extends javax.swing.JDialog {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JCheckBox chkEstado;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

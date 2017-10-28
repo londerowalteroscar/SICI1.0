@@ -29,6 +29,7 @@ public class buscarResponsable extends javax.swing.JDialog {
         initComponents();
         this.setLocationRelativeTo(null);
         crearTabla();
+        
     }
     public void crearTabla() {
         Session sesion = HibernateUtil.getSessionFactory().openSession();
@@ -160,7 +161,6 @@ public class buscarResponsable extends javax.swing.JDialog {
         rdbDNI = new javax.swing.JRadioButton();
         btnBuscar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
-        btnSeleccionarTodo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -280,8 +280,6 @@ public class buscarResponsable extends javax.swing.JDialog {
             }
         });
 
-        btnSeleccionarTodo.setText("Seliccionr Todo");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -300,9 +298,7 @@ public class buscarResponsable extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(332, 332, 332)
-                                .addComponent(btnSeleccionarTodo)
-                                .addGap(18, 18, 18)
+                                .addGap(332, 468, Short.MAX_VALUE)
                                 .addComponent(btnAceptar)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnCancelar)))))
@@ -320,8 +316,7 @@ public class buscarResponsable extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
-                    .addComponent(btnAceptar)
-                    .addComponent(btnSeleccionarTodo))
+                    .addComponent(btnAceptar))
                 .addContainerGap())
         );
 
@@ -410,17 +405,9 @@ public class buscarResponsable extends javax.swing.JDialog {
         // TODO add your handling code here:
         TableModel model = jtbTabla.getModel();
         int indice = jtbTabla.getSelectedRow();
-        Object[] fila = new Object[7];
-        fila[0]=model.getValueAt(indice, 0);
-        fila[1]=model.getValueAt(indice, 1);
-        fila[2]=model.getValueAt(indice, 2);
-        fila[3]=model.getValueAt(indice, 3);
-        fila[4]=model.getValueAt(indice, 4);
-        fila[5]=model.getValueAt(indice, 5);
-        fila[6]=model.getValueAt(indice, 6);
-        
-        System.out.println(Arrays.toString(fila));
-        
+        String idd = String.valueOf(model.getValueAt(indice, 0));
+        crudResponsable crud = new crudResponsable(null, true);
+        crud.busqueda(idd);        
         this.setVisible(false);
         
     }//GEN-LAST:event_btnAceptarActionPerformed
@@ -476,7 +463,6 @@ public class buscarResponsable extends javax.swing.JDialog {
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnSeleccionarTodo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
