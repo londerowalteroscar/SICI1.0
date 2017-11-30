@@ -5,6 +5,8 @@
  */
 package sici.vistas;
 
+import sici.modelo.Articulo;
+
 /**
  *
  * @author londe
@@ -57,6 +59,11 @@ public class Principal extends javax.swing.JFrame {
         btnEmpresa.setText("Empresas");
         btnEmpresa.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnEmpresa.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnEmpresa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmpresaActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnEmpresa);
 
         btnUsuarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IconPack/user-150.png"))); // NOI18N
@@ -110,6 +117,8 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArticuloActionPerformed
         // TODO add your handling code here:
+        crudArticulo crud = new crudArticulo(this, true);
+        crud.setVisible(true);
         
     }//GEN-LAST:event_btnArticuloActionPerformed
 
@@ -119,6 +128,11 @@ public class Principal extends javax.swing.JFrame {
         crud.setVisible(true);
         
     }//GEN-LAST:event_btnResponsableActionPerformed
+
+    private void btnEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpresaActionPerformed
+        crudEmpresa crud = new crudEmpresa(this, true);
+        crud.setVisible(true);
+    }//GEN-LAST:event_btnEmpresaActionPerformed
 
     public void pruebaGithub(){
         System.out.println("Prueba Github");

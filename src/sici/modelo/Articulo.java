@@ -21,21 +21,21 @@ public class Articulo  implements java.io.Serializable {
      private Integer estockMinimo;
      private String numSerie;
      private Integer estado;
-     private int idEmpresa;
+     private Empresa empresa;
      private Set almacens = new HashSet(0);
-     private Set empresas = new HashSet(0);
 
     public Articulo() {
     }
 
 	
-    public Articulo(int idArticulo, Marca marca, Unidad unidad, int idEmpresa) {
+    public Articulo(int idArticulo, Marca marca, Unidad unidad, Empresa empresa) {
         this.idArticulo = idArticulo;
         this.marca = marca;
         this.unidad = unidad;
-        this.idEmpresa = idEmpresa;
+        this.empresa = empresa;
     }
-    public Articulo(int idArticulo, Marca marca, Unidad unidad, Double precio, String descripcion, String nombre, Integer existencia, Integer estockMinimo, String numSerie, Integer estado, int idEmpresa, Set almacens, Set empresas) {
+    public Articulo(int idArticulo, Marca marca, Unidad unidad, Double precio, String descripcion, String nombre, 
+            Integer existencia, Integer estockMinimo, String numSerie, Integer estado, Empresa empresa, Set almacens) {
        this.idArticulo = idArticulo;
        this.marca = marca;
        this.unidad = unidad;
@@ -46,9 +46,9 @@ public class Articulo  implements java.io.Serializable {
        this.estockMinimo = estockMinimo;
        this.numSerie = numSerie;
        this.estado = estado;
-       this.idEmpresa = idEmpresa;
+       this.empresa = empresa;
        this.almacens = almacens;
-       this.empresas = empresas;
+
     }
    
     public int getIdArticulo() {
@@ -121,12 +121,12 @@ public class Articulo  implements java.io.Serializable {
     public void setEstado(Integer estado) {
         this.estado = estado;
     }
-    public int getIdEmpresa() {
-        return this.idEmpresa;
+    public Empresa getEmpresa() {
+        return this.empresa;
     }
     
-    public void setIdEmpresa(int idEmpresa) {
-        this.idEmpresa = idEmpresa;
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
     }
     public Set getAlmacens() {
         return this.almacens;
@@ -135,13 +135,7 @@ public class Articulo  implements java.io.Serializable {
     public void setAlmacens(Set almacens) {
         this.almacens = almacens;
     }
-    public Set getEmpresas() {
-        return this.empresas;
-    }
-    
-    public void setEmpresas(Set empresas) {
-        this.empresas = empresas;
-    }
+ 
 
 
 

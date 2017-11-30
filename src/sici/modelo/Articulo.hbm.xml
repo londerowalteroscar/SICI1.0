@@ -35,22 +35,15 @@
         <property name="estado" type="java.lang.Integer">
             <column name="estado" />
         </property>
-        <property name="idEmpresa" type="int">
+        <many-to-one name="empresa" class="sici.modelo.Empresa" fetch="select">
             <column name="id_empresa" not-null="true" />
-        </property>
+        </many-to-one>
         <set name="almacens" table="almacen" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="id_articulo" not-null="true" />
             </key>
             <one-to-many class="sici.modelo.Almacen" />
         </set>
-        <set name="empresas" table="empresa_has_articulo" inverse="false" lazy="true" fetch="select">
-            <key>
-                <column name="articulo_id_articulo" not-null="true" />
-            </key>
-            <many-to-many entity-name="sici.modelo.Empresa">
-                <column name="empresa_id_empresa" not-null="true" />
-            </many-to-many>
-        </set>
+        
     </class>
 </hibernate-mapping>

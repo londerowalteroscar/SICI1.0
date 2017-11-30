@@ -30,8 +30,11 @@ public class buscarResponsable extends javax.swing.JFrame {
         btnAceptar.setEnabled(false);
     }
     
-    public void aceptar(){
-        
+    public void txtVacio(){
+        if (txtBuscar.getText()==""){
+            JOptionPane.showMessageDialog(this, "Debe escribir Algo para Buscar");
+            return;
+        }
     }
     
     public void crearTabla() {
@@ -48,6 +51,10 @@ public class buscarResponsable extends javax.swing.JFrame {
     }
     
     private void buscar() {
+        if (txtBuscar.getText()==""){
+            JOptionPane.showMessageDialog(this, "Debe escribir Algo para Buscar");
+            return;
+        }
         try {
             
             Session sesion = HibernateUtil.getSessionFactory().openSession();
@@ -165,7 +172,12 @@ public class buscarResponsable extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         txtBuscar.setFont(new java.awt.Font("Dialog", 2, 12)); // NOI18N
         txtBuscar.setHorizontalAlignment(javax.swing.JTextField.LEFT);
@@ -356,7 +368,6 @@ public class buscarResponsable extends javax.swing.JFrame {
         // TODO add your handling code here:
         int c = evt.getKeyChar();
         if(rdbCodigo.isSelected() || rdbDNI.isSelected()){
-
             if(c == evt.VK_ENTER){
                 buscar();
                 return;
@@ -434,6 +445,12 @@ public class buscarResponsable extends javax.swing.JFrame {
         // TODO add your handling code here:
         btnAceptar.setEnabled(true);
     }//GEN-LAST:event_jtbTablaMouseClicked
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.dispose();
+        crudResponsable crud = new crudResponsable(null, true);
+        crud.setVisible(true);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
