@@ -7,8 +7,11 @@ package sici.vistas;
 
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import sici.modelo.Articulo;
 import sici.modelo.Empresa;
 import sici.modelo.Marca;
@@ -33,6 +36,8 @@ public class crudArticulo extends javax.swing.JDialog {
         cargarTabla();
         cargarCmbUnidad();
         cargarCmbMarca();
+        desactivarCampos();
+        limpiarCampos();
     }
     
     public void cargarCmbEmpresa(){
@@ -158,6 +163,53 @@ public class crudArticulo extends javax.swing.JDialog {
         
     }
     
+    public void limpiarCampos(){
+        txtId.setText("");
+        txtNombre.setText("");
+        txtCodigo.setText("");
+        txtCantidad.setText("");
+        cmbUnidad.setSelectedIndex(-1);
+        cmbEmpresa.setSelectedIndex(-1);
+        txtDescripcion.setText("");
+        cmbMarca.setSelectedIndex(-1);
+        txtStockMinimo.setText("");
+        txtPrecio.setText("");
+        chkEstado.setSelected(true);
+    }
+    
+    public void activarCampos(){
+        txtNombre.setEnabled(true);
+        txtCodigo.setEnabled(true);
+        txtCantidad.setEnabled(true);
+        cmbUnidad.setEnabled(true);
+        cmbEmpresa.setEnabled(true);
+        txtDescripcion.setEnabled(true);
+        cmbMarca.setEnabled(true);
+        txtStockMinimo.setEnabled(true);
+        txtPrecio.setEnabled(true);
+        btnGuardar.setEnabled(true);
+    }
+    
+    public void desactivarCampos(){
+        txtNombre.setEnabled(false);
+        txtCodigo.setEnabled(false);
+        txtCantidad.setEnabled(false);
+        cmbUnidad.setEnabled(false);
+        cmbEmpresa.setEnabled(false);
+        txtDescripcion.setEnabled(false);
+        cmbMarca.setEnabled(false);
+        txtStockMinimo.setEnabled(false);
+        txtPrecio.setEnabled(false);
+        btnGuardar.setEnabled(false);
+    }
+    
+    public void activarBotones(){
+        btnAgregar.setEnabled(true);
+        btnBuscar.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        btnEliminar.setEnabled(true);
+        btnModificar.setEnabled(true);
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -313,6 +365,9 @@ public class crudArticulo extends javax.swing.JDialog {
             }
         });
 
+        chkEstado.setSelected(true);
+        chkEstado.setEnabled(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -422,12 +477,22 @@ public class crudArticulo extends javax.swing.JDialog {
         jScrollPane1.setViewportView(tblArticulo);
 
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnModificar.setText("Modificar");
 
         btnEliminar.setText("Eliminar");
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -473,10 +538,7 @@ public class crudArticulo extends javax.swing.JDialog {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane3)
-                .addContainerGap())
+            .addComponent(jScrollPane3)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -526,6 +588,12 @@ public class crudArticulo extends javax.swing.JDialog {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         // TODO add your handling code here:
+        limpiarCampos();
+        activarCampos();
+        btnEliminar.setEnabled(false);
+        btnModificar.setEnabled(false);
+        btnAgregar.setEnabled(false);
+        btnBuscar.setEnabled(false);
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
@@ -541,10 +609,79 @@ public class crudArticulo extends javax.swing.JDialog {
     }//GEN-LAST:event_cmbUnidadActionPerformed
 
     private void tblArticuloMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblArticuloMouseClicked
-       mostrarTabla();
-
-        
+       mostrarTabla();    
+       desactivarCampos();
     }//GEN-LAST:event_tblArticuloMouseClicked
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        limpiarCampos();
+        desactivarCampos();
+        btnGuardar.setText("Guardar");
+        activarBotones();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+//         TODO add your handling code here:
+        Session sesion = HibernateUtil.getSessionFactory().openSession();
+        sesion.beginTransaction();
+            if(txtNombre.getText().equals("")){
+                JOptionPane.showMessageDialog(this, "Debe agregar un Nombre", "Nombre Vacío", JOptionPane.ERROR_MESSAGE);
+            }else if(txtCodigo.getText().isEmpty()){
+                JOptionPane.showMessageDialog(this, "Debe agregar un Código", "Código Vacío", JOptionPane.ERROR_MESSAGE);
+            }else if(txtCantidad.getText().isEmpty()){
+                JOptionPane.showMessageDialog(this, "Debe agregar una Cantidad", "Cantidad Vacía", JOptionPane.ERROR_MESSAGE);
+            }else if(cmbUnidad.getSelectedIndex()==-1){
+                JOptionPane.showMessageDialog(this, "Debe seleccionar una Unidad", "Unidad Vacía", JOptionPane.ERROR_MESSAGE);
+            }else if(cmbEmpresa.getSelectedIndex()==-1){
+                JOptionPane.showMessageDialog(this, "Debe seleccionar una Empresa", "Empresa Vacía", JOptionPane.ERROR_MESSAGE);
+            }else if(cmbMarca.getSelectedIndex()==-1){
+                JOptionPane.showMessageDialog(this, "Debe seleccionar una Marca", "Marca Vacía", JOptionPane.ERROR_MESSAGE);
+            }else if(txtStockMinimo.getText().isEmpty()){
+                JOptionPane.showMessageDialog(this, "Debe agregar un Stock Mínimo", "Stock Mínimo Vacío", JOptionPane.ERROR_MESSAGE);
+            }else if(txtPrecio.getText().isEmpty()){
+                JOptionPane.showMessageDialog(this, "Debe agregar un Precio", "Precio Vacío", JOptionPane.ERROR_MESSAGE);
+            }else if(btnGuardar.getText().equals("Guardar")){
+                String nombre = txtNombre.getText();
+                String codigo = txtCodigo.getText();
+                String descripcion = txtDescripcion.getText();
+                int cantidad = Integer.parseInt(txtCantidad.getText());
+                String unid = cmbUnidad.getSelectedItem().toString();
+                    Query query = sesion.createQuery("from Unidad u where u.descripcion = :des");
+                    query.setParameter("des", unid);
+                    Unidad uni = (Unidad)query.uniqueResult();
+                String empr = cmbEmpresa.getSelectedItem().toString();
+                    Query query2 = sesion.createQuery("from Empresa e where e.nombre = :nom");
+                    query2.setParameter("nom", empr);
+                    Empresa emp = (Empresa)query2.uniqueResult();
+                String marc = cmbMarca.getSelectedItem().toString();
+                    Query query3 = sesion.createQuery("from Marca m where m.nombre = :nom");
+                    query3.setParameter("nom", marc);
+                    Marca mar = (Marca)query3.uniqueResult();
+                int stock = Integer.parseInt(txtStockMinimo.getText());
+                Double precio = Double.parseDouble(txtPrecio.getText());
+                Articulo art = new Articulo();
+                    art.setNombre(nombre);
+                    art.setNumSerie(codigo);
+                    art.setExistencia(cantidad);
+                    art.setUnidad(uni);
+                    art.setEmpresa(emp);
+                    art.setMarca(mar);
+                    art.setEstockMinimo(stock);
+                    art.setPrecio(precio);
+                    art.setEstado(1);
+                    art.setDescripcion(descripcion);
+                sesion.save(art);
+                sesion.getTransaction().commit();
+                sesion.close();
+                cargarTabla();
+                limpiarCampos();
+                desactivarCampos();
+                JOptionPane.showMessageDialog(this, "Artículo guardado Correctamente");
+                activarBotones();
+            }
+            
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     /**
      * @param args the command line arguments
