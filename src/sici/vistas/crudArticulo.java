@@ -611,6 +611,7 @@ public class crudArticulo extends javax.swing.JDialog {
     private void tblArticuloMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblArticuloMouseClicked
        mostrarTabla();    
        desactivarCampos();
+       
     }//GEN-LAST:event_tblArticuloMouseClicked
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
