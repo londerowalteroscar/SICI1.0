@@ -84,9 +84,14 @@ public class Principal extends javax.swing.JFrame {
         jPanel1.add(btnResponsable);
 
         btnGestion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IconPack/settings-150.png"))); // NOI18N
-        btnGestion.setText("Gestión");
+        btnGestion.setText("Movimientos Almacen");
         btnGestion.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnGestion.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnGestion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGestionActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnGestion);
 
         btnConsulta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IconPack/list-150.png"))); // NOI18N
@@ -133,6 +138,12 @@ public class Principal extends javax.swing.JFrame {
         crudEmpresa crud = new crudEmpresa(this, true);
         crud.setVisible(true);
     }//GEN-LAST:event_btnEmpresaActionPerformed
+
+    private void btnGestionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionActionPerformed
+        // TODO add your handling code here:
+        frmAlmacen crud = new frmAlmacen(this, true);
+        crud.setVisible(true);
+    }//GEN-LAST:event_btnGestionActionPerformed
 
     public void pruebaGithub(){
         System.out.println("Prueba Github");

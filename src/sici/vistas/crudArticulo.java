@@ -5,10 +5,12 @@
  */
 package sici.vistas;
 
+import java.awt.Frame;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.hibernate.HibernateException;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -211,6 +213,36 @@ public class crudArticulo extends javax.swing.JDialog {
         btnModificar.setEnabled(true);
     }
     
+    public void eliminar(){
+        String nombre; //Crea las variables que se van imprimir
+        nombre = txtNombre.getText(); //Tomamos los valores que estan en los txt
+        int elimina = JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar articulo: "+nombre+"?", "ATENCIÓN", JOptionPane.YES_NO_OPTION);
+        if(elimina == 0){// SI=0 y NO=1
+            try {
+                    Session sesion = HibernateUtil.getSessionFactory().openSession();
+                    sesion.beginTransaction();
+                    int id = (Integer.parseInt(txtId.getText()));
+                    Articulo art = sesion.load(Articulo.class, id);
+                    art.setNombre(art.getNombre());
+                    art.setNumSerie(art.getNumSerie());
+                    art.setExistencia(art.getExistencia());
+                    art.setUnidad(art.getUnidad());
+                    art.setEmpresa(art.getEmpresa());
+                    art.setMarca(art.getMarca());
+                    art.setEstockMinimo(art.getEstockMinimo());
+                    art.setPrecio(art.getPrecio());
+                    art.setDescripcion(art.getDescripcion());
+                    art.setEstado(0);
+                    sesion.update(art);
+                    sesion.getTransaction().commit();
+                    sesion.close();
+            } catch (HibernateException he) {
+                    he.printStackTrace();
+            }
+        }
+        cargarTabla(); 
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -245,6 +277,7 @@ public class crudArticulo extends javax.swing.JDialog {
         cmbMarca = new javax.swing.JComboBox<>();
         cmbUnidad = new javax.swing.JComboBox<>();
         chkEstado = new javax.swing.JCheckBox();
+        btnEmpresa = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblArticulo = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
@@ -257,6 +290,13 @@ public class crudArticulo extends javax.swing.JDialog {
         txtDescripcion = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
 
         lblMantenimientoUsuario.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         lblMantenimientoUsuario.setText("Mantenimiento de Artículo");
@@ -368,6 +408,13 @@ public class crudArticulo extends javax.swing.JDialog {
         chkEstado.setSelected(true);
         chkEstado.setEnabled(false);
 
+        btnEmpresa.setText("Anadir empresa");
+        btnEmpresa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmpresaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -401,8 +448,10 @@ public class crudArticulo extends javax.swing.JDialog {
                                 .addGap(0, 3, Short.MAX_VALUE))
                             .addComponent(txtId, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnEmpresa)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(chkEstado)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -438,8 +487,9 @@ public class crudArticulo extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(cmbEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
+                    .addComponent(cmbEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEmpresa))
+                .addGap(37, 37, 37)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(cmbMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -486,6 +536,11 @@ public class crudArticulo extends javax.swing.JDialog {
         btnModificar.setText("Modificar");
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -560,7 +615,7 @@ public class crudArticulo extends javax.swing.JDialog {
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 15, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -571,12 +626,14 @@ public class crudArticulo extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(38, 38, 38)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -684,6 +741,25 @@ public class crudArticulo extends javax.swing.JDialog {
             
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    private void btnEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpresaActionPerformed
+        Frame Principal = null;
+        crudEmpresa crud = new crudEmpresa(Principal, true);
+        crud.setVisible(true);
+    }//GEN-LAST:event_btnEmpresaActionPerformed
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        // TODO add your handling code here:
+        cargarCmbEmpresa();
+        cargarCmbMarca();
+        cargarCmbUnidad();
+        
+    }//GEN-LAST:event_formWindowGainedFocus
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        eliminar();
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -732,6 +808,7 @@ public class crudArticulo extends javax.swing.JDialog {
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnEmpresa;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JCheckBox chkEstado;
